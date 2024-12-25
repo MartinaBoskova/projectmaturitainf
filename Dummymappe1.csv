@@ -1,0 +1,13 @@
+﻿Firma;PN;Name;Monat;Jahr;Beitragsgruppe;SV-Tage;Bezahlte Tage;KL.;Kinderfreibetrag;Lohnart;Lohnartbescreibung;Zeit;Prozent;Faktor;Betrag;Betrag2
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;610001;GV pro Stunde;39;;13,1;;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;702901;Zuschlag Nacht;2;0;13,1;;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;702901;Zuschlag Nacht;1,25;0;13,1;;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;703025;ABT SFN st/sv-pfl;;;;;8,09
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;751510;Reinigungspsch.;;;;;4
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;789001;Zlg var Zulagen;;;;4;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;001010;Gesamt/Brutto;;;;9000;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;001011;EBV/Brutto;;;;;9000
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;001470;Netto;;;;9000;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;001471;EBV/Netto;;;;;9000
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;001474;Uberweisungsbetragt;;;;9000;
+1002000;44444;Pan pes;8;2024;5468;30;31;1;0;000102;Urlaubs-Anspruch;25;;;;
