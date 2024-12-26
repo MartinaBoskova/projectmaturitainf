@@ -163,6 +163,18 @@ def Final_report():
         sheet_cell1.value = 30
         i = i + 1
 
+    for i in range(0, len(list_months)):
+        monthvalue = list_months[i]
+        if isinstance(monthvalue, list):
+            for j in range(0, len(monthvalue)):
+                moremonthvalue = monthvalue[j]
+                sheet_cell = sheet.cell(row=i+2, column=moremonthvalue+1)
+                sheet_cell.value = 1
+            i = i + 1
+        else:
+            sheet_cell = sheet.cell(row=i+2, column=monthvalue+1)
+            sheet_cell.value = 1
+            i = i + 1
     workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
 
 
@@ -253,6 +265,9 @@ def month_count(x, y):
             i = i + 1
     print(remembered_months)
     return remembered_months
+
+
+list_months = month_count(0, 1)
 
 
 Namecolumn(Column_Name)
