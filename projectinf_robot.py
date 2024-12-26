@@ -1,4 +1,8 @@
 import openpyxl
+from openpyxl import Workbook
+import time
+
+workbook = Workbook()
 
 path = "Dummymappe1.xlsx"
 
@@ -72,7 +76,7 @@ def Namecolumn(x):
             i = i + 1
     Column_Name = x
     if Column_Name == 0:
-        print("Column with Namen not found. Please change the title of the column with names to 'Name or name'.")
+        print("Column with Namen not found. Please change the title of the column to 'Name or name'.")
     return Column_Name
 
 
@@ -86,7 +90,7 @@ def Lohncolumn(x):
             i = i + 1
     Column_Lohn = x
     if Column_Lohn == 0:
-        print("Column with Lohnartbeschreibungen not found. Please change the title of the column with Lohnartbeschreibungen to 'Lohnartbeschreibung or lohnartbeschreibung'.")
+        print("Column with Lohnartbeschreibungen not found. Please change the title of the column to 'Lohnartbeschreibung or lohnartbeschreibung'.")
     return Column_Lohn
 
 
@@ -101,6 +105,40 @@ def people_number(x):
             x = x + 1
             i = i + 1
     print("Number of people is:", x)
+
+
+def Final_report():
+    named_tuple = time.localtime()
+    current_month = time.strftime("%m", named_tuple)
+    current_year = time.strftime("%y", named_tuple)
+    workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
+
+    sheet = workbook.active
+    c = sheet['A1']
+    c.value = "Zeilenbeschriftungen"
+    sheet.column_dimensions['A'].width = 20
+
+    for i in range(1, 13):
+        sheet_cell = sheet.cell(row=1, column=i+1)
+        if not i == current_month and i < 10:
+            j = str(i)
+            sheet_cell.value = "0" + j + "/" + current_year
+            i = i + 1
+        elif not i == current_month and i > 10:
+            j = str(i)
+            sheet_cell.value = j + "/" + current_year
+            i = i + 1
+        else:
+            sheet_cell.value = current_month + "/" + current_year
+            break
+
+
+    for i in range(0, len(fall_30(0, 1))):
+        sheet_cell = sheet.cell(row=i+2, column=1)
+        sheet_cell.value = fall_30(0, 1)[i]
+        i = i + 1
+
+    workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
 
 
 def fall_30(x, y):
@@ -128,6 +166,7 @@ def fall_30(x, y):
             i = i + 1
     print("Number of Fall 30 detected is:", x)
     print(remembered_names)
+    return remembered_names
 
 
 Namecolumn(Column_Name)
@@ -138,3 +177,4 @@ print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column
 
 people_number(0)
 fall_30(0, 1)
+Final_report()
