@@ -104,6 +104,7 @@ def people_number(x):
 
 
 def fall_30(x, y):
+    remembered_names = list(())
     for i in range(2, row_number+1):
         Lohnartbeschreibung = sheet_obj.cell(row=i, column=Lohncolumn(Column_Lohn))
         name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
@@ -113,6 +114,7 @@ def fall_30(x, y):
                 if Lohnartbeschreibung.value == Fall30[j]:
                     y = y + 1
                     print("Fall 30 detected")
+                    remembered_names.insert(x, name_a.value)
                     x = x + 1
                     break
                 else:
@@ -125,11 +127,14 @@ def fall_30(x, y):
         else:
             i = i + 1
     print("Number of Fall 30 detected is:", x)
+    print(remembered_names)
 
 
 Namecolumn(Column_Name)
 print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
+
 Lohncolumn(Column_Lohn)
 print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
+
 people_number(0)
 fall_30(0, 1)
