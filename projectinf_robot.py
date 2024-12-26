@@ -205,7 +205,7 @@ list_names, list_PN, list_AbrK = fall_30(0, 1)
 
 def month_count(x, y):
     remembered_months = list(())
-    for i in range(2, row_number+1):
+    for i in range(2, row_number):
         name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
         month_a = sheet_obj.cell(row=i, column=Monthcolumn(Column_Month))
@@ -214,28 +214,43 @@ def month_count(x, y):
         if name_a.value == name_b.value and month_a.value == month_b.value and y == 1:
             remembered_months.insert(x, month_a.value)
             x = x + 1
-            y = y + 1
-            i = i + 1
-        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 2:
-            remembered_months.insert(x - 1, list((month_a.value, month_b.value)))
+            y = 2
             i = i + 1
         elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 1:
             remembered_months.insert(x, list((month_a.value, month_b.value)))
             x = x + 1
+            y = 2
             i = i + 1
         elif not name_a.value == name_b.value and y == 1:
             remembered_months.insert(x, month_a.value)
             x = x + 1
             remembered_months.insert(x, month_b.value)
             x = x + 1
+            y = 2
+            i = i + 1
+#        elif name_a.value == name_b.value and month_a.value == month_b.value and y > 2:
+#            i = i + 1
+        elif name_a.value == name_b.value and not month_a.value == month_b.value and y > 2:
+            remembered_months.insert(y - 1, list.insert(y-1, month_b.value))
+            i = i + 1
+        elif not name_a.value == name_b.value and y > 2:
+            remembered_months.insert(x, month_b.value)
+            x = x + 1
+            y = 2
+            i = i + 1
+        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 2:
+            remembered_months.pop(x - 1)
+            remembered_months.insert(x - 1, list((month_a.value, month_b.value)))
             y = y + 1
             i = i + 1
+#        elif name_a.value == name_b.value and month_a.value == month_b.value and y == 2:
+#            i = i + 1
         elif not name_a.value == name_b.value and y == 2:
             remembered_months.insert(x, month_b.value)
             x = x + 1
             i = i + 1
-            
-
+        else:
+            i = i + 1
     print(remembered_months)
     return remembered_months
 
