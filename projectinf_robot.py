@@ -117,6 +117,10 @@ def Final_report():
     c = sheet['A1']
     c.value = "Zeilenbeschriftungen"
     sheet.column_dimensions['A'].width = 20
+    c1 = sheet['N1']
+    c1.value = "RR A."
+    c2 = sheet['O1']
+    c2.value = "Grund"
 
     for i in range(1, 13):
         sheet_cell = sheet.cell(row=1, column=i+1)
@@ -124,7 +128,7 @@ def Final_report():
             j = str(i)
             sheet_cell.value = "0" + j + "/" + current_year
             i = i + 1
-        elif not i == current_month and i > 10:
+        elif not i == current_month and i >= 10:
             j = str(i)
             sheet_cell.value = j + "/" + current_year
             i = i + 1
@@ -132,10 +136,11 @@ def Final_report():
             sheet_cell.value = current_month + "/" + current_year
             break
 
-
     for i in range(0, len(fall_30(0, 1))):
         sheet_cell = sheet.cell(row=i+2, column=1)
         sheet_cell.value = fall_30(0, 1)[i]
+        sheet_cell1 = sheet.cell(row=i+2, column=15)
+        sheet_cell1.value = 30
         i = i + 1
 
     workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
