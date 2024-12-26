@@ -75,6 +75,7 @@ def Namecolumn(x):
         print("Column with Namen not found. Please change the title of the column with names to 'Name or name'.")
     return Column_Name
 
+
 def Lohncolumn(x):
     for i in range(1, column_number + 1):
         lohn_column = sheet_obj.cell(row=1, column=i)
@@ -127,8 +128,8 @@ def fall_30(x, y):
 
 
 Namecolumn(Column_Name)
-print("Column with Namen is number:", Namecolumn(Column_Name))
+print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
 Lohncolumn(Column_Lohn)
-print("Column with Lohnartbeschreibungen is number:", Lohncolumn(Column_Lohn))
+print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
 people_number(0)
 fall_30(0, 1)
