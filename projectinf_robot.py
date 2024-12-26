@@ -15,6 +15,7 @@ column_number = sheet_obj.max_column
 
 Column_Name = 0
 Column_Lohn = 0
+Column_Month = 0
 
 Fall30 = ["ABT SFN st/sv-pfl",
           "AG-Zu.lfd.3(63)",
@@ -77,6 +78,7 @@ def Namecolumn(x):
     Column_Name = x
     if Column_Name == 0:
         print("Column with Namen not found. Please change the title of the column to 'Name or name'.")
+        exit()
     return Column_Name
 
 
@@ -91,7 +93,23 @@ def Lohncolumn(x):
     Column_Lohn = x
     if Column_Lohn == 0:
         print("Column with Lohnartbeschreibungen not found. Please change the title of the column to 'Lohnartbeschreibung or lohnartbeschreibung'.")
+        exit()
     return Column_Lohn
+
+
+def Monthcolumn(x):
+    for i in range(1, column_number + 1):
+        month_column = sheet_obj.cell(row=1, column=i)
+        if month_column.value == "Monat" or month_column == "monat":
+            x = i
+            break
+        else:
+            i = i + 1
+    Column_Month = x
+    if Column_Month == 0:
+        print("Column with Months not found. Please change the title of the column to 'Monat or monat'.")
+        exit()
+    return Column_Month
 
 
 def people_number(x):
@@ -181,14 +199,55 @@ def fall_30(x, y):
     print(remembered_names)
     return remembered_names, remembered_PN, remembered_AbrK
 
+
 list_names, list_PN, list_AbrK = fall_30(0, 1)
+
+
+def month_count(x, y):
+    remembered_months = list(())
+    for i in range(2, row_number+1):
+        name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
+        name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
+        month_a = sheet_obj.cell(row=i, column=Monthcolumn(Column_Month))
+        month_b = sheet_obj.cell(row=i + 1, column=Monthcolumn(Column_Month))
+
+        if name_a.value == name_b.value and month_a.value == month_b.value and y == 1:
+            remembered_months.insert(x, month_a.value)
+            x = x + 1
+            y = y + 1
+            i = i + 1
+        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 2:
+            remembered_months.insert(x - 1, list((month_a.value, month_b.value)))
+            i = i + 1
+        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 1:
+            remembered_months.insert(x, list((month_a.value, month_b.value)))
+            x = x + 1
+            i = i + 1
+        elif not name_a.value == name_b.value and y == 1:
+            remembered_months.insert(x, month_a.value)
+            x = x + 1
+            remembered_months.insert(x, month_b.value)
+            x = x + 1
+            y = y + 1
+            i = i + 1
+        elif not name_a.value == name_b.value and y == 2:
+            remembered_months.insert(x, month_b.value)
+            x = x + 1
+            i = i + 1
+            
+
+    print(remembered_months)
+    return remembered_months
+
 
 Namecolumn(Column_Name)
 print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
 
 Lohncolumn(Column_Lohn)
 print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
+Monthcolumn(Column_Month)
 
 people_number(0)
 fall_30(0, 1)
+month_count(0, 1)
 Final_report()
