@@ -156,11 +156,16 @@ def Final_report():
 
     for i in range(0, len(list_names)):
         sheet_cell = sheet.cell(row=i+2, column=1)
-        j = str(list_AbrK[i])
-        k = str(list_PN[i])
-        sheet_cell.value = (j + "/" + k + "/" + list_names[i])
-        sheet_cell1 = sheet.cell(row=i+2, column=15)
-        sheet_cell1.value = 30
+        AbrK = str(list_AbrK[i])
+        PN = str(list_PN[i])
+        sheet_cell.value = (AbrK + "/" + PN + "/" + list_names[i])
+        for j in range(0, len(list_names30)):
+            if list_names30[j] == list_names[i]:
+                sheet_cell1 = sheet.cell(row=i+2, column=15)
+                sheet_cell1.value = 30
+                break
+            else:
+                j = j + 1
         i = i + 1
 
     for i in range(0, len(list_months)):
@@ -179,6 +184,7 @@ def Final_report():
 
 
 def fall_30(x, y):
+    remembered_names_30 = list(())
     remembered_names = list(())
     remembered_AbrK = list(())
     remembered_PN = list(())
@@ -188,19 +194,31 @@ def fall_30(x, y):
         data_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-1)
         data_b = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-2)
         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
+
+        remembered_names.insert(i-2, name_a.value)
+        remembered_AbrK.insert(i-2, data_b.value)
+        remembered_PN.insert(i-2, data_a.value)
         if name_a.value == name_b.value and y == 1:
             for j in range(0, len(Fall30)):
                 if Lohnartbeschreibung.value == Fall30[j]:
                     y = y + 1
                     print("Fall 30 detected")
-                    remembered_names.insert(x, name_a.value)
-                    remembered_PN.insert(x, data_a.value)
-                    remembered_AbrK.insert(x, data_b.value)
+                    remembered_names_30.insert(x, name_a.value)
                     x = x + 1
                     break
                 else:
                     continue
-        elif name_a.value == name_b.value and y == 2:
+            i = i + 1
+        elif not name_a.value == name_b.value and y == 1:
+            for j in range(0, len(Fall30)):
+                if Lohnartbeschreibung.value == Fall30[j]:
+                    y = y + 1
+                    print("Fall 30 detected")
+                    remembered_names_30.insert(x, name_a.value)
+                    x = x + 1
+                    break
+                else:
+                    continue
             i = i + 1
         elif not name_a.value == name_b.value and y == 2:
             y = y - 1
@@ -208,11 +226,14 @@ def fall_30(x, y):
         else:
             i = i + 1
     print("Number of Fall 30 detected is:", x)
+    print(remembered_names_30)
     print(remembered_names)
-    return remembered_names, remembered_PN, remembered_AbrK
+    remembered_names = list(dict.fromkeys(remembered_names))
+    print(remembered_names)
+    return remembered_names, remembered_PN, remembered_AbrK, remembered_names_30
 
 
-list_names, list_PN, list_AbrK = fall_30(0, 1)
+list_names, list_PN, list_AbrK, list_names30 = fall_30(0, 1)
 
 
 def month_count(x, y):
