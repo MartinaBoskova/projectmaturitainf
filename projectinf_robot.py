@@ -136,9 +136,11 @@ def Final_report():
             sheet_cell.value = current_month + "/" + current_year
             break
 
-    for i in range(0, len(fall_30(0, 1))):
+    for i in range(0, len(list_names)):
         sheet_cell = sheet.cell(row=i+2, column=1)
-        sheet_cell.value = fall_30(0, 1)[i]
+        j = str(list_AbrK[i])
+        k = str(list_PN[i])
+        sheet_cell.value = (j + "/" + k + "/" + list_names[i])
         sheet_cell1 = sheet.cell(row=i+2, column=15)
         sheet_cell1.value = 30
         i = i + 1
@@ -148,9 +150,13 @@ def Final_report():
 
 def fall_30(x, y):
     remembered_names = list(())
+    remembered_AbrK = list(())
+    remembered_PN = list(())
     for i in range(2, row_number+1):
         Lohnartbeschreibung = sheet_obj.cell(row=i, column=Lohncolumn(Column_Lohn))
         name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
+        data_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-1)
+        data_b = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-2)
         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
         if name_a.value == name_b.value and y == 1:
             for j in range(0, len(Fall30)):
@@ -158,6 +164,8 @@ def fall_30(x, y):
                     y = y + 1
                     print("Fall 30 detected")
                     remembered_names.insert(x, name_a.value)
+                    remembered_PN.insert(x, data_a.value)
+                    remembered_AbrK.insert(x, data_b.value)
                     x = x + 1
                     break
                 else:
@@ -171,8 +179,9 @@ def fall_30(x, y):
             i = i + 1
     print("Number of Fall 30 detected is:", x)
     print(remembered_names)
-    return remembered_names
+    return remembered_names, remembered_PN, remembered_AbrK
 
+list_names, list_PN, list_AbrK = fall_30(0, 1)
 
 Namecolumn(Column_Name)
 print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
