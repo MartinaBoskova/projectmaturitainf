@@ -72,19 +72,29 @@ def people_number(x):
     print("Number of people is:", x)
 
 
-def fall_30(x):
+def fall_30(x, y):
     for i in range(2, row_number+1):
         Lohnartbeschreibung = sheet_obj.cell(row=i, column=12)
-        for j in range(0, len(Fall30)):
-            if Lohnartbeschreibung.value == Fall30[j]:
-                print("Fall 30 detected")
-                x = x + 1
-                break
-            else:
-                continue
-        i = i + 1
-    print("Number of 30 detected is:", x)
+        name_a = sheet_obj.cell(row=i, column=3)
+        name_b = sheet_obj.cell(row=i + 1, column=3)
+        if name_a.value == name_b.value and y == 1:
+            for j in range(0, len(Fall30)):
+                if Lohnartbeschreibung.value == Fall30[j]:
+                    y = y + 1
+                    print("Fall 30 detected")
+                    x = x + 1
+                    break
+                else:
+                    continue
+        elif name_a.value == name_b.value and y == 2:
+            i = i + 1
+        elif not name_a.value == name_b.value and y == 2:
+            y = y - 1
+            i = i + 1
+        else:
+            i = i + 1
+    print("Number of Fall 30 detected is:", x)
 
 
 people_number(0)
-fall_30(0)
+fall_30(0, 1)
