@@ -4,7 +4,8 @@ import datetime
 
 workbook = Workbook()
 
-path = "Dummymappe1.xlsx"
+print("Please select a file:")
+path = filename = input()
 
 wb_obj = openpyxl.load_workbook(path)
 
