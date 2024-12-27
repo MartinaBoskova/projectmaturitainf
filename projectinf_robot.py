@@ -1,6 +1,6 @@
 import openpyxl
 from openpyxl import Workbook
-import time
+import datetime
 
 workbook = Workbook()
 
@@ -126,10 +126,10 @@ def people_number(x):
 
 
 def Final_report():
-    named_tuple = time.localtime()
-    current_month = time.strftime("%m", named_tuple)
-    current_year = time.strftime("%y", named_tuple)
-    workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
+    month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
+    last_month = month_tuple.strftime("%m")
+    current_year = month_tuple.strftime("%y")
+    workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
     sheet = workbook.active
     c = sheet['A1']
@@ -140,19 +140,23 @@ def Final_report():
     c2 = sheet['O1']
     c2.value = "Grund"
 
-    for i in range(1, 13):
-        sheet_cell = sheet.cell(row=1, column=i+1)
-        if not i == current_month and i < 10:
-            j = str(i)
-            sheet_cell.value = "0" + j + "/" + current_year
-            i = i + 1
-        elif not i == current_month and i >= 10:
-            j = str(i)
-            sheet_cell.value = j + "/" + current_year
-            i = i + 1
+    for i in range(0, 12):
+        sheet_cell = sheet.cell(row=1, column=13 - i)
+        if int(last_month) - i >= 1:
+            sheet_cell.value = str(int(last_month) - i) + "/" + current_year
         else:
-            sheet_cell.value = current_month + "/" + current_year
-            break
+            sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
+#       if not i == last_month and i < 10:
+#            j = str(i)
+#            sheet_cell.value = "0" + j + "/" + current_year
+#            i = i + 1
+#        elif not i == last_month and i >= 10:
+#            j = str(i)
+#            sheet_cell.value = j + "/" + current_year
+#            i = i + 1
+#        else:
+#            sheet_cell.value = last_month + "/" + current_year
+#            break
 
     for i in range(0, len(list_names)):
         sheet_cell = sheet.cell(row=i+2, column=1)
@@ -180,7 +184,7 @@ def Final_report():
             sheet_cell = sheet.cell(row=i+2, column=monthvalue+1)
             sheet_cell.value = 1
             i = i + 1
-    workbook.save(filename=(("Qualität_" + current_month + "_" + current_year + ".xlsx")))
+    workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
 
 def fall_30(x, y):
