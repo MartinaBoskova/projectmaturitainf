@@ -63,6 +63,7 @@ Fall30 = ["ABT SFN st/sv-pfl",
           "Zuschlag Feiertag",
           "Zuschlag Nacht",
           "Zuschlag Sonntag"]
+End_of_finalreport = ["Grund", 10, 13, 19, 25, 26, 27, 30, 31, 0, "Summe"]
 
 print("Total Rows:", row_number)
 print("Total Columns:", column_number)
@@ -128,15 +129,35 @@ def people_number(x):
 
 def End_of_report():
     sheet = workbook.active
-    c3 = sheet.cell(row=1000+len(list_names), column=1)
+    active_space_row = 1000+len(list_names)
+    c3 = sheet.cell(row=active_space_row, column=1)
     c3.value = "Gesamtergebnis"
     for i in range(0, 12):
-        row_gsmterg = str(1000 + len(list_names))
+        row_gsmterg = str(active_space_row)
         column_gsmterg = chr(64 + 2 + i)
         sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(list_names))})'
         i = i + 1
 
-
+    c4 = sheet.cell(row=active_space_row+11, column=2)
+    c4.value = "RR="
+    c5 = sheet.cell(row=active_space_row+11, column=3)
+    c5.value = f'=COUNT(B2:M{str(active_space_row)})'
+    for i in range(0, len(End_of_finalreport)):
+        sheet_cell = sheet.cell(row=active_space_row+14+i, column=2)
+        sheet_cell.value = End_of_finalreport[i]
+        i = i + 1
+    for i in range(0, len(End_of_finalreport)):
+        sheet_cell = sheet.cell(row=active_space_row+15+len(End_of_finalreport)+i, column=2)
+        sheet_cell.value = End_of_finalreport[i]
+        i = i + 1
+    c6 = sheet.cell(row=active_space_row+14, column=1)
+    c6.value = "Qualität Streamline:"
+    c7 = sheet.cell(row=active_space_row+14+len(End_of_finalreport), column=1)
+    c7.value = "Faktura"
+    c8 = sheet.cell(row=active_space_row+15+len(End_of_finalreport), column=1)
+    c8.value = "Qualität Intern:"
+    c9 = sheet.cell(row=active_space_row+18+2*len(End_of_finalreport), column=1)
+    c9.value = "Echt"
 
 
 def Final_report():
