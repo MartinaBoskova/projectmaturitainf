@@ -126,6 +126,19 @@ def people_number(x):
     print("Number of people is:", x)
 
 
+def End_of_report():
+    sheet = workbook.active
+    c3 = sheet.cell(row=1000+len(list_names), column=1)
+    c3.value = "Gesamtergebnis"
+    for i in range(0, 12):
+        row_gsmterg = str(1000 + len(list_names))
+        column_gsmterg = chr(64 + 2 + i)
+        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(list_names))})'
+        i = i + 1
+
+
+
+
 def Final_report():
     month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
     last_month = month_tuple.strftime("%m")
@@ -140,6 +153,7 @@ def Final_report():
     c1.value = "RR A."
     c2 = sheet['O1']
     c2.value = "Grund"
+    End_of_report()
 
     for i in range(0, 12):
         sheet_cell = sheet.cell(row=1, column=13 - i)
@@ -188,8 +202,7 @@ def Final_report():
 
         row_sum = str(i + 1)
         column_sum = chr(64 + 14)
-        sheet[column_sum + row_sum] = f'=SUM(A{row_sum}:M{row_sum})'
-        print(f'=SUM(A{row_sum}:M{row_sum})')
+        sheet[column_sum + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
     workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
 
@@ -206,8 +219,10 @@ def fall_30(x, y):
         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
 
         remembered_names.insert(i-2, name_a.value)
-        remembered_AbrK.insert(i-2, data_b.value)
         remembered_PN.insert(i-2, data_a.value)
+        if not name_a.value == name_b.value:
+            remembered_AbrK.insert(i-2, data_b.value)
+
         if name_a.value == name_b.value and y == 1:
             for j in range(0, len(Fall30)):
                 if Lohnartbeschreibung.value == Fall30[j]:
@@ -239,6 +254,9 @@ def fall_30(x, y):
     print(remembered_names_30)
     print(remembered_names)
     remembered_names = list(dict.fromkeys(remembered_names))
+    print(remembered_AbrK)
+    remembered_PN = list(dict.fromkeys(remembered_PN))
+    print(remembered_PN)
     print(remembered_names)
     return remembered_names, remembered_PN, remembered_AbrK, remembered_names_30
 
