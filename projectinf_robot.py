@@ -4,7 +4,7 @@ import datetime
 
 workbook = Workbook()
 
-print("Please select a file:")
+print("Please select a file in format: Name.xlsx")
 path = filename = input()
 
 wb_obj = openpyxl.load_workbook(path)
@@ -185,6 +185,11 @@ def Final_report():
             sheet_cell = sheet.cell(row=i+2, column=monthvalue+1)
             sheet_cell.value = 1
             i = i + 1
+
+        row_sum = str(i + 1)
+        column_sum = chr(64 + 14)
+        sheet[column_sum + row_sum] = f'=SUM(A{row_sum}:M{row_sum})'
+        print(f'=SUM(A{row_sum}:M{row_sum})')
     workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
 
