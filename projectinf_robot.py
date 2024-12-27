@@ -296,10 +296,20 @@ list_months = month_count(0, 1)
 
 
 Namecolumn(Column_Name)
-print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
+if Namecolumn(Column_Name) <= 26:
+    print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
+else:
+    first_chr = int(Namecolumn(Column_Name) / 26)
+    second_chr = Namecolumn(Column_Name) - (26 * first_chr)
+    print("Column with Namen is letter:", chr(64 + first_chr), chr(64 + second_chr))
 
 Lohncolumn(Column_Lohn)
-print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
+if Lohncolumn(Column_Lohn) <= 26:
+    print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
+else:
+    firs1_chr = int(Lohncolumn(Column_Lohn) / 26)
+    second1_chr = Lohncolumn(Column_Lohn) - (26 * firs1_chr)
+    print("Column with Lohnartbeschreibungen is letter:", chr(64 + firs1_chr), chr(64 + second1_chr))
 Monthcolumn(Column_Month)
 
 people_number(0)
