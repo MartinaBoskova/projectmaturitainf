@@ -16,50 +16,50 @@ row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
 ListFall30 = ["ABT SFN st/sv-pfl",
-          "AG-Zu.lfd.3(63)",
-          "Ant.Listenperis P",
-          "Ant.SFN st/sv-pfl",
-          "Ant.SFN sv-pfl.",
-          "Ant.Wo.-Arbeit PK",
-          "BAV St.lfd. 3/63",
-          "DBA/ATE lfd ST",
-          "EFZ-Entgelt DS (3",
-          "Fahrtkosten stpfl",
-          "Grundvergütung",
-          "GV pro Stunde",
-          "GV-Aushilfen Zahl",
-          "GV-Prakt. Ind.",
-          "Inflationsausglei",
-          "Kleidergeld",
-          "Kleidergeld HR",
-          "Kontoführungsgeb.",
-          "Krankentgelt DP",
-          "Krankentgelt DS",
-          "LFZ Zuschlag",
-          "Listenpreis PKW",
-          "MA Zuschlag allg.",
-          "Mehrbereichzul.",
-          "Netto-Hochr.",
-          "persönl. Zulage",
-          "PKW Zahlung gwV",
-          "Prämie NHR",
-          "Reinigungspauscha",
-          "Reinigungspsch.",
-          "Saalzschl.",
-          "Saalzschl. Kasse",
-          "Saalzschlag",
-          "Saalzschlag Kasse",
-          "Stunden",
-          "Taetigkeitszulage",
-          "Urlaubentgelt DS",
-          "VL-AG-Zuschu",
-          "Weihnachtsgeld",
-          "Zlg MuSchu Zuschuß",
-          "Zlg var Zulagen",
-          "Zulage",
-          "Zuschlag Feiertag",
-          "Zuschlag Nacht",
-          "Zuschlag Sonntag"]
+              "AG-Zu.lfd.3(63)",
+              "Ant.Listenperis P",
+              "Ant.SFN st/sv-pfl",
+              "Ant.SFN sv-pfl.",
+              "Ant.Wo.-Arbeit PK",
+              "BAV St.lfd. 3/63",
+              "DBA/ATE lfd ST",
+              "EFZ-Entgelt DS (3",
+              "Fahrtkosten stpfl",
+              "Grundvergütung",
+              "GV pro Stunde",
+              "GV-Aushilfen Zahl",
+              "GV-Prakt. Ind.",
+              "Inflationsausglei",
+              "Kleidergeld",
+              "Kleidergeld HR",
+              "Kontoführungsgeb.",
+              "Krankentgelt DP",
+              "Krankentgelt DS",
+              "LFZ Zuschlag",
+              "Listenpreis PKW",
+              "MA Zuschlag allg.",
+              "Mehrbereichzul.",
+              "Netto-Hochr.",
+              "persönl. Zulage",
+              "PKW Zahlung gwV",
+              "Prämie NHR",
+              "Reinigungspauscha",
+              "Reinigungspsch.",
+              "Saalzschl.",
+              "Saalzschl. Kasse",
+              "Saalzschlag",
+              "Saalzschlag Kasse",
+              "Stunden",
+              "Taetigkeitszulage",
+              "Urlaubentgelt DS",
+              "VL-AG-Zuschu",
+              "Weihnachtsgeld",
+              "Zlg MuSchu Zuschuß",
+              "Zlg var Zulagen",
+              "Zulage",
+              "Zuschlag Feiertag",
+              "Zuschlag Nacht",
+              "Zuschlag Sonntag"]
 
 End_of_finalreport = ["Grund", 10, 13, 19, 25, 26, 27, 30, 31, 0, "Summe"]
 
@@ -77,6 +77,7 @@ with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
         else:
             people_dict[line[1]].append(line)
 
+
 class Person:
     def __init__(self, Abrk, Name, PN, Month, Lohn, Fall30):
         self.Abrk = Abrk
@@ -86,6 +87,7 @@ class Person:
         self.Lohn = Lohn
         self.Fall30 = Fall30
         pass
+
 
 All_the_People = list(dict.fromkeys(people_dict))
 
@@ -110,7 +112,8 @@ def People_classes(i):
                 Fall30 = True
                 break
     Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
-    return Current_person.Abrk, Current_person.Name, Current_person.PN, Current_person.Month, Current_person.Lohn, Current_person.Fall30
+    return (Current_person.Abrk, Current_person.Name, Current_person.PN,
+            Current_person.Month, Current_person.Lohn, Current_person.Fall30)
 
 
 for i in range(1, len(All_the_People)):
@@ -175,9 +178,10 @@ def Final_report():
     for i in range(1, len(All_the_People)):
         Current_person = People_classes(i)
         sheet_cell = sheet.cell(row=i+1, column=1)
-        sheet_cell.value = (Current_person[0] + "/" + Current_person[2] + "/" + Current_person[1])
+        sheet_cell.value = (Current_person[0] + "/"
+                            + Current_person[2] + "/" + Current_person[1])
 
-        if Current_person[5] == True:
+        if Current_person[5]:
             sheet_cell1 = sheet.cell(row=i+1, column=15)
             sheet_cell1.value = 30
 
@@ -194,6 +198,7 @@ def Final_report():
         column_sum = chr(64 + 14)
         sheet[column_sum + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
     workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
+
 
 Final_report()
 os.remove("Dummymappe2csv.csv")
