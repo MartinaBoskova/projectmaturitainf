@@ -77,47 +77,44 @@ with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
         else:
             people_dict[line[1]].append(line)
 
-
-class Person:
-    def __init__(self, Abrk, Name, PN, Month, Lohn, Fall30):
-        self.Abrk = Abrk
-        self.Name = Name
-        self.PN = PN
-        self.Month = Month
-        self.Lohn = Lohn
-        self.Fall30 = Fall30
-        pass
-
-
 All_the_People = list(dict.fromkeys(people_dict))
 
 
-def People_classes(i):
-    Fall30 = False
-    Month = []
-    Lohn = []
-    Current_person = All_the_People[i]
-    Abrk = people_dict[Current_person][0][0]
-    Name = people_dict[Current_person][0][2]
-    PN = people_dict[Current_person][0][1]
+class Person:
+    def __init__(self, i_in_people):
+        Current_person = All_the_People[i_in_people]
+        self.Abrk = people_dict[Current_person][0][0]
+        self.Name = people_dict[Current_person][0][2]
+        self.PN = people_dict[Current_person][0][1]
+        self.Month = []
+        self.Lohn = []
+        self.Fall30 = False
 
-    for j in range(0, len(people_dict[Current_person])):
-        Month.append(people_dict[Current_person][j][3])
-        Lohn.append(people_dict[Current_person][j][11])
-    Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
 
-    for k in range(0, len(Current_person.Lohn)):
-        for j in range(0, len(ListFall30)):
-            if Current_person.Lohn[k] == ListFall30[j]:
+def People_classes(x):
+    Local_month = []
+    Local_lohn = []
+    for i in people_dict[All_the_People[x]]:
+        Local_month.append(i[3])
+        Local_lohn.append(i[11])
+    Local_month = list(dict.fromkeys(Local_month))
+    Local_lohn = list(dict.fromkeys(Local_lohn))
+
+    for k in Local_lohn:
+        for j in ListFall30:
+            if k == j:
                 Fall30 = True
                 break
-    Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
-    return (Current_person.Abrk, Current_person.Name, Current_person.PN,
-            Current_person.Month, Current_person.Lohn, Current_person.Fall30)
+
+    Person(x).Month = Local_month
+    Person(x).Lohn = Local_lohn
+    Person(x).Fall30 = Fall30
+    return Person(x)
 
 
+List_of_People = [Person]
 for i in range(1, len(All_the_People)):
-    People_classes(i)
+    List_of_People.append(People_classes(i))
 
 
 def End_of_report():
@@ -172,21 +169,18 @@ def Final_report():
             sheet_cell.value = str(int(last_month) - i) + "/" + current_year
         else:
             sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
-        for i in range(1, len(All_the_People)):
-            Current_person = People_classes(i)
 
     for i in range(1, len(All_the_People)):
-        Current_person = People_classes(i)
         sheet_cell = sheet.cell(row=i+1, column=1)
-        sheet_cell.value = (Current_person[0] + "/"
-                            + Current_person[2] + "/" + Current_person[1])
+        sheet_cell.value = (Person(i).Abrk + "/"
+                            + Person(i).PN + "/" + Person(i).Name)
 
-        if Current_person[5]:
+        if Person(i).Fall30:
             sheet_cell1 = sheet.cell(row=i+1, column=15)
             sheet_cell1.value = 30
 
-        for k in range(0, len(Current_person[3])):
-            month_position = int(last_month) - int(Current_person[3][k])
+        for k in range(0, len(Person(i).Month)):
+            month_position = int(last_month) - int(Person(i).Month[k])
             if month_position >= 0:
                 sheet_cell = sheet.cell(row=i+1, column=13-month_position)
                 sheet_cell.value = 1
