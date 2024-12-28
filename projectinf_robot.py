@@ -1,22 +1,21 @@
 import openpyxl
 from openpyxl import Workbook
 import datetime
+import csv
+import os
 
 workbook = Workbook()
 
 print("Please select a file in format: Name.xlsx")
-path = filename = input()
-
-wb_obj = openpyxl.load_workbook(path)
-
+# path = filename = input()
+path = "Dummymappe2csv.xlsx"
+wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
 row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
-Column_Name = 0
-Column_Lohn = 0
-Column_Month = 0
+
 
 Fall30 = ["ABT SFN st/sv-pfl",
           "AG-Zu.lfd.3(63)",
@@ -65,66 +64,80 @@ Fall30 = ["ABT SFN st/sv-pfl",
           "Zuschlag Sonntag"]
 End_of_finalreport = ["Grund", 10, 13, 19, 25, 26, 27, 30, 31, 0, "Summe"]
 
-print("Total Rows:", row_number)
-print("Total Columns:", column_number)
+with open('Dummymappe2csv.csv', 'w', newline="") as file_handle:
+    csv_writer = csv.writer(file_handle, delimiter=";")
+    for row in sheet_obj.iter_rows(min_row=2):
+        csv_writer.writerow([cell.value for cell in row])
 
-
-def Namecolumn(x):
-    for i in range(1, column_number + 1):
-        name_column = sheet_obj.cell(row=1, column=i)
-        if name_column.value == "Name" or name_column == "name":
-            x = i
-            break
+with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
+    csv_rows = list(csv.reader(f, delimiter=';'))
+    people_dict = {int: list}
+    for line in csv_rows:
+        if line[1] not in people_dict:
+            people_dict[line[1]] = [line]
         else:
-            i = i + 1
-    Column_Name = x
-    if Column_Name == 0:
-        print("Column with Namen not found. Please change the title of the column to 'Name or name'.")
-        exit()
-    return Column_Name
+            people_dict[line[1]].append(line)
+    print(people_dict)
+
+class Person:
+    def __init__(self, Abrk, Name, PN, Month, Lohn, Fall_30):
+        self.Abrk = Abrk
+        self.Name = Name
+        self.PN = PN
+        self.Month = Month
+        self.Lohn = Lohn
+        self.Fall_30 = Fall_30
+        pass
+
+All_the_People = list(dict.fromkeys(people_dict))
+
+def People_classes():
+    for i in range(1, len(All_the_People)):
+        Month = []
+        Lohn = []
+        Current_person = All_the_People[i]
+        Abrk = people_dict[Current_person][0][0]
+        Name = people_dict[Current_person][0][2]
+        PN = people_dict[Current_person][0][1]
+        Fall_30 = False
+        for j in range(0, len(people_dict[Current_person])):
+            Month.append(people_dict[Current_person][j][3])
+            Lohn.append(people_dict[Current_person][j][11])
+        Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall_30)
+        print(Current_person.Month)
+
+People_classes()
 
 
-def Lohncolumn(x):
-    for i in range(1, column_number + 1):
-        lohn_column = sheet_obj.cell(row=1, column=i)
-        if lohn_column.value == "Lohnartbeschreibung" or lohn_column == "lohnartbeschreibung":
-            x = i
-            break
-        else:
-            i = i + 1
-    Column_Lohn = x
-    if Column_Lohn == 0:
-        print("Column with Lohnartbeschreibungen not found. Please change the title of the column to 'Lohnartbeschreibung or lohnartbeschreibung'.")
-        exit()
-    return Column_Lohn
 
 
-def Monthcolumn(x):
-    for i in range(1, column_number + 1):
-        month_column = sheet_obj.cell(row=1, column=i)
-        if month_column.value == "Monat" or month_column == "monat":
-            x = i
-            break
-        else:
-            i = i + 1
-    Column_Month = x
-    if Column_Month == 0:
-        print("Column with Months not found. Please change the title of the column to 'Monat or monat'.")
-        exit()
-    return Column_Month
 
 
-def people_number(x):
 
-    for i in range(2, row_number+1):
-        name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
-        name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
-        if name_a.value == name_b.value:
-            i = i + 1
-        else:
-            x = x + 1
-            i = i + 1
-    print("Number of people is:", x)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def people_number():
+#     x = 0
+#     for i in range(2, row_number+1):
+#         name_a = sheet_obj.cell(row=i, column=Namecolumn())
+#         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn())
+#         if name_a.value == name_b.value:
+#             i = i + 1
+#         else:
+#             x = x + 1
+#             i = i + 1
+#     print("Number of people is:", x)
 
 
 def End_of_report():
@@ -157,7 +170,7 @@ def End_of_report():
     c8 = sheet.cell(row=active_space_row+15+len(End_of_finalreport), column=1)
     c8.value = "Qualität Intern:"
     c9 = sheet.cell(row=active_space_row+18+2*len(End_of_finalreport), column=1)
-    c9.value = "Echt"
+    c9.value = "Echt:"
 
 
 def Final_report():
@@ -182,17 +195,6 @@ def Final_report():
             sheet_cell.value = str(int(last_month) - i) + "/" + current_year
         else:
             sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
-#       if not i == last_month and i < 10:
-#            j = str(i)
-#            sheet_cell.value = "0" + j + "/" + current_year
-#            i = i + 1
-#        elif not i == last_month and i >= 10:
-#            j = str(i)
-#            sheet_cell.value = j + "/" + current_year
-#            i = i + 1
-#        else:
-#            sheet_cell.value = last_month + "/" + current_year
-#            break
 
     for i in range(0, len(list_names)):
         sheet_cell = sheet.cell(row=i+2, column=1)
@@ -227,137 +229,122 @@ def Final_report():
     workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
 
-def fall_30(x, y):
-    remembered_names_30 = list(())
-    remembered_names = list(())
-    remembered_AbrK = list(())
-    remembered_PN = list(())
-    for i in range(2, row_number+1):
-        Lohnartbeschreibung = sheet_obj.cell(row=i, column=Lohncolumn(Column_Lohn))
-        name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
-        data_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-1)
-        data_b = sheet_obj.cell(row=i, column=Namecolumn(Column_Name)-2)
-        name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
+#def fall_30(y):
+#     x = 0
+#     remembered_names_30 = []
+#     remembered_names = []
+#     remembered_AbrK = []
+#     remembered_PN = []
+#     for i in range(2, row_number+1):
+#         Lohnartbeschreibung = sheet_obj.cell(row=i, column=Lohncolumn())
+#         name_a = sheet_obj.cell(row=i, column=Namecolumn())
+#         data_a = sheet_obj.cell(row=i, column=Namecolumn()-1)
+#         data_b = sheet_obj.cell(row=i, column=Namecolumn()-2)
+#         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn())
 
-        remembered_names.insert(i-2, name_a.value)
-        remembered_PN.insert(i-2, data_a.value)
-        if not name_a.value == name_b.value:
-            remembered_AbrK.insert(i-2, data_b.value)
+#         remembered_names.insert(i-2, name_a.value)
+#         remembered_PN.insert(i-2, data_a.value)
+#         if not name_a.value == name_b.value:
+#             remembered_AbrK.insert(i-2, data_b.value)
 
-        if name_a.value == name_b.value and y == 1:
-            for j in range(0, len(Fall30)):
-                if Lohnartbeschreibung.value == Fall30[j]:
-                    y = y + 1
-                    print("Fall 30 detected")
-                    remembered_names_30.insert(x, name_a.value)
-                    x = x + 1
-                    break
-                else:
-                    continue
-            i = i + 1
-        elif not name_a.value == name_b.value and y == 1:
-            for j in range(0, len(Fall30)):
-                if Lohnartbeschreibung.value == Fall30[j]:
-                    y = y + 1
-                    print("Fall 30 detected")
-                    remembered_names_30.insert(x, name_a.value)
-                    x = x + 1
-                    break
-                else:
-                    continue
-            i = i + 1
-        elif not name_a.value == name_b.value and y == 2:
-            y = y - 1
-            i = i + 1
-        else:
-            i = i + 1
-    print("Number of Fall 30 detected is:", x)
-    print(remembered_names_30)
-    print(remembered_names)
-    remembered_names = list(dict.fromkeys(remembered_names))
-    print(remembered_AbrK)
-    remembered_PN = list(dict.fromkeys(remembered_PN))
-    print(remembered_PN)
-    print(remembered_names)
-    return remembered_names, remembered_PN, remembered_AbrK, remembered_names_30
-
-
-list_names, list_PN, list_AbrK, list_names30 = fall_30(0, 1)
+#         if name_a.value == name_b.value and y == 1:
+#             for j in range(0, len(Fall30)):
+#                 if Lohnartbeschreibung.value == Fall30[j]:
+#                     y = y + 1
+#                     print("Fall 30 detected")
+#                     remembered_names_30.insert(x, name_a.value)
+#                     x = x + 1
+#                     break
+#                 else:
+#                     continue
+#             i = i + 1
+#         elif not name_a.value == name_b.value and y == 1:
+#             for j in range(0, len(Fall30)):
+#                 if Lohnartbeschreibung.value == Fall30[j]:
+#                     y = y + 1
+#                     print("Fall 30 detected")
+#                     remembered_names_30.insert(x, name_a.value)
+#                     x = x + 1
+#                     break
+#                 else:
+#                     continue
+#             i = i + 1
+#         elif not name_a.value == name_b.value and y == 2:
+#             y = y - 1
+#             i = i + 1
+#         else:
+#             i = i + 1
+#     print("Number of Fall 30 detected is:", x)
+#     print(remembered_names_30)
+#     print(remembered_names)
+#     remembered_names = list(dict.fromkeys(remembered_names))
+#     print(remembered_AbrK)
+#     remembered_PN = list(dict.fromkeys(remembered_PN))
+#     print(remembered_PN)
+#     print(remembered_names)
+#     return remembered_names, remembered_PN, remembered_AbrK, remembered_names_30
 
 
-def month_count(x, y):
-    remembered_months = list(())
-    for i in range(2, row_number):
-        name_a = sheet_obj.cell(row=i, column=Namecolumn(Column_Name))
-        name_b = sheet_obj.cell(row=i + 1, column=Namecolumn(Column_Name))
-        month_a = sheet_obj.cell(row=i, column=Monthcolumn(Column_Month))
-        month_b = sheet_obj.cell(row=i + 1, column=Monthcolumn(Column_Month))
-
-        if name_a.value == name_b.value and month_a.value == month_b.value and y == 1:
-            remembered_months.insert(x, month_a.value)
-            x = x + 1
-            y = 2
-            i = i + 1
-        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 1:
-            remembered_months.insert(x, list((month_a.value, month_b.value)))
-            x = x + 1
-            y = 2
-            i = i + 1
-        elif not name_a.value == name_b.value and y == 1:
-            remembered_months.insert(x, month_a.value)
-            x = x + 1
-            remembered_months.insert(x, month_b.value)
-            x = x + 1
-            y = 2
-            i = i + 1
-#        elif name_a.value == name_b.value and month_a.value == month_b.value and y > 2:
-#            i = i + 1
-        elif name_a.value == name_b.value and not month_a.value == month_b.value and y > 2:
-            remembered_months.insert(y - 1, list.insert(y-1, month_b.value))
-            i = i + 1
-        elif not name_a.value == name_b.value and y > 2:
-            remembered_months.insert(x, month_b.value)
-            x = x + 1
-            y = 2
-            i = i + 1
-        elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 2:
-            remembered_months.pop(x - 1)
-            remembered_months.insert(x - 1, list((month_a.value, month_b.value)))
-            y = y + 1
-            i = i + 1
-#        elif name_a.value == name_b.value and month_a.value == month_b.value and y == 2:
-#            i = i + 1
-        elif not name_a.value == name_b.value and y == 2:
-            remembered_months.insert(x, month_b.value)
-            x = x + 1
-            i = i + 1
-        else:
-            i = i + 1
-    print(remembered_months)
-    return remembered_months
+# list_names, list_PN, list_AbrK, list_names30 = fall_30(0, 1)
 
 
-list_months = month_count(0, 1)
+#def month_count(y):
+#     x = 0
+#     remembered_months = []
+#     for i in range(2, row_number):
+#         name_a = sheet_obj.cell(row=i, column=Namecolumn())
+#         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn())
+#         month_a = sheet_obj.cell(row=i, column=Monthcolumn())
+#         month_b = sheet_obj.cell(row=i + 1, column=Monthcolumn())
+
+#         if name_a.value == name_b.value and month_a.value == month_b.value and y == 1:
+#             remembered_months.insert(x, month_a.value)
+#             x = x + 1
+#             y = 2
+#             i = i + 1
+#         elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 1:
+#             remembered_months.insert(x, list((month_a.value, month_b.value)))
+#             x = x + 1
+#             y = 2
+#             i = i + 1
+#         elif not name_a.value == name_b.value and y == 1:
+#             remembered_months.insert(x, month_a.value)
+#             x = x + 1
+#             remembered_months.insert(x, month_b.value)
+#             x = x + 1
+#             y = 2
+#             i = i + 1
+# #        elif name_a.value == name_b.value and month_a.value == month_b.value and y > 2:
+# #            i = i + 1
+#         elif name_a.value == name_b.value and not month_a.value == month_b.value and y > 2:
+#             remembered_months.insert(y - 1, list.insert(y-1, month_b.value))
+#             i = i + 1
+#         elif not name_a.value == name_b.value and y > 2:
+#             remembered_months.insert(x, month_b.value)
+#             x = x + 1
+#             y = 2
+#             i = i + 1
+#         elif name_a.value == name_b.value and not month_a.value == month_b.value and y == 2:
+#             remembered_months.pop(x - 1)
+#             remembered_months.insert(x - 1, list((month_a.value, month_b.value)))
+#             y = y + 1
+#             i = i + 1
+# #        elif name_a.value == name_b.value and month_a.value == month_b.value and y == 2:
+# #            i = i + 1
+#         elif not name_a.value == name_b.value and y == 2:
+#             remembered_months.insert(x, month_b.value)
+#             x = x + 1
+#             i = i + 1
+#         else:
+#             i = i + 1
+#     print(remembered_months)
+#     return remembered_months
 
 
-Namecolumn(Column_Name)
-if Namecolumn(Column_Name) <= 26:
-    print("Column with Namen is letter:", chr(64 + Namecolumn(Column_Name)))
-else:
-    first_chr = int(Namecolumn(Column_Name) / 26)
-    second_chr = Namecolumn(Column_Name) - (26 * first_chr)
-    print("Column with Namen is letter:", chr(64 + first_chr), chr(64 + second_chr))
+#list_months = month_count(1)
 
-Lohncolumn(Column_Lohn)
-if Lohncolumn(Column_Lohn) <= 26:
-    print("Column with Lohnartbeschreibungen is letter:", chr(64 + Lohncolumn(Column_Lohn)))
-else:
-    firs1_chr = int(Lohncolumn(Column_Lohn) / 26)
-    second1_chr = Lohncolumn(Column_Lohn) - (26 * firs1_chr)
-    print("Column with Lohnartbeschreibungen is letter:", chr(64 + firs1_chr), chr(64 + second1_chr))
-Monthcolumn(Column_Month)
-
-people_number(0)
-fall_30(0, 1)
-month_count(0, 1)
-Final_report()
+# people_number()
+# fall_30(1)
+# month_count(1)
+# Final_report()
+os.remove("Dummymappe2csv.csv")
