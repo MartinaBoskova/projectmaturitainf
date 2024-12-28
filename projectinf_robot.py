@@ -15,8 +15,6 @@ sheet_obj = wb_obj.active
 row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
-
-
 ListFall30 = ["ABT SFN st/sv-pfl",
           "AG-Zu.lfd.3(63)",
           "Ant.Listenperis P",
@@ -62,6 +60,7 @@ ListFall30 = ["ABT SFN st/sv-pfl",
           "Zuschlag Feiertag",
           "Zuschlag Nacht",
           "Zuschlag Sonntag"]
+
 End_of_finalreport = ["Grund", 10, 13, 19, 25, 26, 27, 30, 31, 0, "Summe"]
 
 with open('Dummymappe2csv.csv', 'w', newline="") as file_handle:
@@ -91,59 +90,42 @@ class Person:
 All_the_People = list(dict.fromkeys(people_dict))
 
 
-def People_classes():
-    for i in range(1, len(All_the_People)):
-        Fall30 = False
-        Month = []
-        Lohn = []
-        Current_person = All_the_People[i]
-        Abrk = people_dict[Current_person][0][0]
-        Name = people_dict[Current_person][0][2]
-        PN = people_dict[Current_person][0][1]
+def People_classes(i):
+    Fall30 = False
+    Month = []
+    Lohn = []
+    Current_person = All_the_People[i]
+    Abrk = people_dict[Current_person][0][0]
+    Name = people_dict[Current_person][0][2]
+    PN = people_dict[Current_person][0][1]
 
-        for j in range(0, len(people_dict[Current_person])):
-            Month.append(people_dict[Current_person][j][3])
-            Lohn.append(people_dict[Current_person][j][11])
-        Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
+    for j in range(0, len(people_dict[Current_person])):
+        Month.append(people_dict[Current_person][j][3])
+        Lohn.append(people_dict[Current_person][j][11])
+    Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
 
-        for k in range(0, len(Current_person.Lohn)):
-            for j in range(0, len(ListFall30)):
-                if Current_person.Lohn[k] == ListFall30[j]:
-                    Fall30 = True
-                    print("Fall 30 detected")
-                    break
-        Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
-        print(Current_person.Lohn, Current_person.Fall30)
+    for k in range(0, len(Current_person.Lohn)):
+        for j in range(0, len(ListFall30)):
+            if Current_person.Lohn[k] == ListFall30[j]:
+                Fall30 = True
+                break
+    Current_person = Person(Abrk, Name, PN, Month, Lohn, Fall30)
+    return Current_person.Abrk, Current_person.Name, Current_person.PN, Current_person.Month, Current_person.Lohn, Current_person.Fall30
 
 
-People_classes()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+for i in range(1, len(All_the_People)):
+    People_classes(i)
 
 
 def End_of_report():
     sheet = workbook.active
-    active_space_row = 1000+len(list_names)
+    active_space_row = 1000+len(All_the_People)
     c3 = sheet.cell(row=active_space_row, column=1)
     c3.value = "Gesamtergebnis"
     for i in range(0, 12):
         row_gsmterg = str(active_space_row)
         column_gsmterg = chr(64 + 2 + i)
-        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(list_names))})'
-        i = i + 1
+        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(All_the_People))})'
 
     c4 = sheet.cell(row=active_space_row+11, column=2)
     c4.value = "RR="
@@ -152,11 +134,9 @@ def End_of_report():
     for i in range(0, len(End_of_finalreport)):
         sheet_cell = sheet.cell(row=active_space_row+14+i, column=2)
         sheet_cell.value = End_of_finalreport[i]
-        i = i + 1
     for i in range(0, len(End_of_finalreport)):
         sheet_cell = sheet.cell(row=active_space_row+15+len(End_of_finalreport)+i, column=2)
         sheet_cell.value = End_of_finalreport[i]
-        i = i + 1
     c6 = sheet.cell(row=active_space_row+14, column=1)
     c6.value = "Qualität Streamline:"
     c7 = sheet.cell(row=active_space_row+14+len(End_of_finalreport), column=1)
@@ -189,98 +169,31 @@ def Final_report():
             sheet_cell.value = str(int(last_month) - i) + "/" + current_year
         else:
             sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
+        for i in range(1, len(All_the_People)):
+            Current_person = People_classes(i)
 
-    for i in range(0, len(list_names)):
-        sheet_cell = sheet.cell(row=i+2, column=1)
-        AbrK = str(list_AbrK[i])
-        PN = str(list_PN[i])
-        sheet_cell.value = (AbrK + "/" + PN + "/" + list_names[i])
-        for j in range(0, len(list_names30)):
-            if list_names30[j] == list_names[i]:
-                sheet_cell1 = sheet.cell(row=i+2, column=15)
-                sheet_cell1.value = 30
-                break
-            else:
-                j = j + 1
-        i = i + 1
+    for i in range(1, len(All_the_People)):
+        Current_person = People_classes(i)
+        sheet_cell = sheet.cell(row=i+1, column=1)
+        sheet_cell.value = (Current_person[0] + "/" + Current_person[2] + "/" + Current_person[1])
 
-    for i in range(0, len(list_months)):
-        monthvalue = list_months[i]
-        if isinstance(monthvalue, list):
-            for j in range(0, len(monthvalue)):
-                moremonthvalue = monthvalue[j]
-                sheet_cell = sheet.cell(row=i+2, column=moremonthvalue+1)
+        if Current_person[5] == True:
+            sheet_cell1 = sheet.cell(row=i+1, column=15)
+            sheet_cell1.value = 30
+
+        for k in range(0, len(Current_person[3])):
+            month_position = int(last_month) - int(Current_person[3][k])
+            if month_position >= 0:
+                sheet_cell = sheet.cell(row=i+1, column=13-month_position)
                 sheet_cell.value = 1
-            i = i + 1
-        else:
-            sheet_cell = sheet.cell(row=i+2, column=monthvalue+1)
-            sheet_cell.value = 1
-            i = i + 1
+            else:
+                sheet_cell = sheet.cell(row=i+1, column=1-month_position)
+                sheet_cell.value = 1
 
         row_sum = str(i + 1)
         column_sum = chr(64 + 14)
         sheet[column_sum + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
     workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
 
-
-#def fall_30(y):
-#     x = 0
-#     remembered_names_30 = []
-#     remembered_names = []
-#     remembered_AbrK = []
-#     remembered_PN = []
-#     for i in range(2, row_number+1):
-#         Lohnartbeschreibung = sheet_obj.cell(row=i, column=Lohncolumn())
-#         name_a = sheet_obj.cell(row=i, column=Namecolumn())
-#         data_a = sheet_obj.cell(row=i, column=Namecolumn()-1)
-#         data_b = sheet_obj.cell(row=i, column=Namecolumn()-2)
-#         name_b = sheet_obj.cell(row=i + 1, column=Namecolumn())
-
-#         remembered_names.insert(i-2, name_a.value)
-#         remembered_PN.insert(i-2, data_a.value)
-#         if not name_a.value == name_b.value:
-#             remembered_AbrK.insert(i-2, data_b.value)
-
-#         if name_a.value == name_b.value and y == 1:
-#             for j in range(0, len(Fall30)):
-#                 if Lohnartbeschreibung.value == Fall30[j]:
-#                     y = y + 1
-#                     print("Fall 30 detected")
-#                     remembered_names_30.insert(x, name_a.value)
-#                     x = x + 1
-#                     break
-#                 else:
-#                     continue
-#             i = i + 1
-#         elif not name_a.value == name_b.value and y == 1:
-#             for j in range(0, len(Fall30)):
-#                 if Lohnartbeschreibung.value == Fall30[j]:
-#                     y = y + 1
-#                     print("Fall 30 detected")
-#                     remembered_names_30.insert(x, name_a.value)
-#                     x = x + 1
-#                     break
-#                 else:
-#                     continue
-#             i = i + 1
-#         elif not name_a.value == name_b.value and y == 2:
-#             y = y - 1
-#             i = i + 1
-#         else:
-#             i = i + 1
-#     print("Number of Fall 30 detected is:", x)
-#     print(remembered_names_30)
-#     print(remembered_names)
-#     remembered_names = list(dict.fromkeys(remembered_names))
-#     print(remembered_AbrK)
-#     remembered_PN = list(dict.fromkeys(remembered_PN))
-#     print(remembered_PN)
-#     print(remembered_names)
-#     return remembered_names, remembered_PN, remembered_AbrK, remembered_names_30
-
-
-# list_names, list_PN, list_AbrK, list_names30 = fall_30(0, 1)
-
-# fall_30(1)
-# Final_report()
+Final_report()
 os.remove("Dummymappe2csv.csv")
