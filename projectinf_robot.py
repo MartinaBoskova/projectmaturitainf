@@ -240,7 +240,7 @@ def Final_report():
     month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
     last_month = month_tuple.strftime("%m")
     current_year = month_tuple.strftime("%y")
-    workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
+    workbook.save(filename=(f"Qualität_{last_month}{current_year}.xlsx"))
 
     c = sheet['A1']
     c.value = "Zeilenbeschriftungen"
@@ -278,9 +278,8 @@ def Final_report():
                 sheet_cell.value = 1
 
         row_sum = str(i + 1)
-        column_sum = chr(64 + 14)
-        sheet[column_sum + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
-    workbook.save(filename=(("Qualität_" + last_month + "_" + current_year + ".xlsx")))
+        sheet["N" + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
+    workbook.save(filename=(f"Qualität_{last_month}{current_year}.xlsx"))
 
 
 Final_report()
