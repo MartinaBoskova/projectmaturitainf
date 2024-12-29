@@ -1,6 +1,7 @@
 import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import Font
+from openpyxl.utils import rows_from_range
 import datetime
 import csv
 import os
@@ -62,56 +63,6 @@ list_fall_30 = ["ABT SFN st/sv-pfl",
                 "Zuschlag Nacht",
                 "Zuschlag Sonntag"]
 
-end_of_final_report = ["Grund", 10, 13, 19, 25, 26, 27, 30, 31, 0, "Summe"]
-
-legende_final_report = ["10 = fehlende / falsche Eingabe",
-                        "11 = durch Kunde reklamierte Fehler",
-                        "12 = frei",
-                        "13 = frei",
-                        "14 = frei",
-                        "15 = Verständnisproblem",
-                        "16 = falsche Berechnung",
-                        "17 = Fehler aus Setup-Übernahme",
-                        "18 = Programmfehler",
-                        "19 = sonstige Fehlergründe",
-                        "20 = Unterlagen unrichtig",
-                        "21 = Lieferung nach Abgebetermin",
-                        "22 = Beleg nicht eindeutig verständlich",
-                        "23 = frei",
-                        "24 = frei",
-                        "25 = Nachzahlungen",
-                        "26 = rückwirkende Ein-/Austritte",
-                        "27 = ELStAM-Korrektur",
-                        "28 = masch. Zahlstellenverfahren",
-                        "29 = sonstige Fehlergründe",
-                        "30 = vespätete Vorlage von Unterlagen",
-                        "31 = Korrekturen Unterbrechung/Zeitwirtschaft",
-                        "32 = fehlerhafte Datenübermittlung"]
-
-legend_of_report = ["10 = missing / false input",
-                    "11 = Fault claimed by client",
-                    "12 = other KB’s mistake",
-                    "13 = ADP Dresden mistake",
-                    "14 = free",
-                    "15 = comprehensive problem",
-                    "16 = false statement of account",
-                    "17 = Fault caused by Setup-Upload",
-                    "18 = Program’s fault",
-                    "19 = anorher fault reasons",
-                    "20 = uncorrect records",
-                    "21 = late data delivery",
-                    "22 = uncomplete and unclear document",
-                    "23 = conjuncture pile II",
-                    "24 = free",
-                    "25 = additional payment",
-                    "26 = backward accession/leaving ",
-                    "27 = free",
-                    "28 = free",
-                    "29 = anorher fault reasons ",
-                    "30 = delayed documents submission",
-                    "31 = corrections of interrupts/time-management",
-                    "32 = uncorrect datatransfer"]
-
 with open('Dummymappe2csv.csv', 'w', newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
     for row in sheet_obj.iter_rows(min_row=2):
@@ -162,81 +113,56 @@ for i in range(1, len(all_the_people)):
     list_of_People.append(people_classes(i))
 
 
-def end_of_report():
-    sheet = workbook.active
-    asrow = 1000+len(all_the_people)
-    c1 = sheet.cell(row=asrow, column=1)
-    c1.value = "Gesamtergebnis"
-    for i in range(0, 12):
-        row_gsmterg = str(asrow)
-        column_gsmterg = chr(64 + 2 + i)
-        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(all_the_people))})'
-
-    c2 = sheet.cell(row=asrow+11, column=2)
-    c2.value = "RR="
-    c3 = sheet.cell(row=asrow+11, column=3)
-    c3.value = f'=COUNT(B2:M{str(asrow)})'
-    for i in range(0, len(end_of_final_report)):
-        sheet_cell = sheet.cell(row=asrow+14+i, column=2)
-        sheet_cell.value = end_of_final_report[i]
-    for i in range(0, len(end_of_final_report)):
-        sheet_cell = sheet.cell(row=asrow+15+len(end_of_final_report)+i, column=2)
-        sheet_cell.value = end_of_final_report[i]
-    c4 = sheet.cell(row=asrow+14, column=1)
-    c4.value = "Qualität Streamline:"
-    c5 = sheet.cell(row=asrow+14+len(end_of_final_report), column=1)
-    c5.value = "Faktura"
-    c6 = sheet.cell(row=asrow+15+len(end_of_final_report), column=1)
-    c6.value = "Qualität Intern:"
-    c7 = sheet.cell(row=asrow+18+2*len(end_of_final_report), column=1)
-    c7.value = "Echt:"
-    c8 = sheet.cell(row=asrow+20+2*len(end_of_final_report), column=1)
-    c8.value = "Legende:"
-    sheet.cell(row=asrow+20+2*len(end_of_final_report), column=1).font = Font(bold=True)
-    c9 = sheet.cell(row=asrow+32+2*len(end_of_final_report), column=1)
-    c9.value = "Legend"
-    c10 = sheet.cell(row=asrow+24+2*len(end_of_final_report), column=14)
-    c10.value = "Bemerkungen:"
-    sheet.cell(row=asrow+24+2*len(end_of_final_report), column=14).font = Font(bold=True)
-
-    for i in range(0, 9):
-        sheet_cell = sheet.cell(row=asrow+21+i+2*len(end_of_final_report), column=1)
-        sheet_cell.value = legende_final_report[i]
-        sheet.merge_cells(f"A{asrow+21+i+2*len(end_of_final_report)}:E{asrow+21+i+2*len(end_of_final_report)}")
-    for i in range(10, 19):
-        sheet_cell = sheet.cell(row=asrow+11+i+2*len(end_of_final_report), column=7)
-        sheet_cell.value = legende_final_report[i]
-        sheet.merge_cells(f"G{asrow+11+i+2*len(end_of_final_report)}:L{asrow+11+i+2*len(end_of_final_report)}")
-    for i in range(20, len(legende_final_report)):
-        sheet_cell = sheet.cell(row=asrow+1+i+2*len(end_of_final_report), column=14)
-        sheet_cell.value = legende_final_report[i]
-        sheet.merge_cells(f"N{asrow+1+i+2*len(end_of_final_report)}:R{asrow+1+i+2*len(end_of_final_report)}")
-    for i in range(0, 9):
-        sheet_cell = sheet.cell(row=asrow+33+i+2*len(end_of_final_report), column=1)
-        sheet_cell.value = legend_of_report[i]
-        sheet.merge_cells(f"A{asrow+33+i+2*len(end_of_final_report)}:E{asrow+33+i+2*len(end_of_final_report)}")
-    for i in range(10, 19):
-        sheet_cell = sheet.cell(row=asrow+23+i+2*len(end_of_final_report), column=7)
-        sheet_cell.value = legend_of_report[i]
-        sheet.merge_cells(f"G{asrow+23+i+2*len(end_of_final_report)}:L{asrow+23+i+2*len(end_of_final_report)}")
-    for i in range(20, len(legend_of_report)):
-        sheet_cell = sheet.cell(row=asrow+13+i+2*len(end_of_final_report), column=14)
-        sheet_cell.value = legend_of_report[i]
-        sheet.merge_cells(f"N{asrow+13+i+2*len(end_of_final_report)}:R{asrow+13+i+2*len(end_of_final_report)}")
-
-    sheet.cell(row=asrow+26+2*len(end_of_final_report), column=7).font = Font(color="00FF0000")
-    sheet.cell(row=asrow+27+2*len(end_of_final_report), column=7).font = Font(color="00FF0000")
-    sheet.cell(row=asrow+28+2*len(end_of_final_report), column=7).font = Font(color="00FF0000")
-    sheet.cell(row=asrow+21+2*len(end_of_final_report), column=14).font = Font(color="00FF0000")
-    sheet.cell(row=asrow+22+2*len(end_of_final_report), column=14).font = Font(color="00FF0000")
-
-
 def final_report():
     sheet = workbook.active
     month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
     last_month = month_tuple.strftime("%m")
     current_year = month_tuple.strftime("%y")
     workbook.save(filename=(f"Qualität_{last_month}_{current_year}.xlsx"))
+
+    asrow = 1000+len(all_the_people)
+
+    file_name_source = 'End_of_Report.xlsx'
+    wb_source = openpyxl.load_workbook(file_name_source)
+    sheet_source = wb_source.active
+
+    range_str = 'A1:R64'
+
+    for row in rows_from_range(range_str):
+        for cell in row:
+            dest_sheet_cell = sheet[cell].offset(row=asrow-1)
+            source_sheet_cell = sheet_source[cell]
+
+            is_merged = False
+            for merged_range in sheet_source.merged_cells.ranges:
+                if merged_range.min_row <= source_sheet_cell.row <= merged_range.max_row and merged_range.min_col <= source_sheet_cell.column <= merged_range.max_col:
+                    is_merged = True
+                    if (source_sheet_cell.row == merged_range.min_row) and (source_sheet_cell.column == merged_range.min_col):
+                        first_merged_source = sheet_source.cell(row=merged_range.min_row, column=merged_range.min_col)
+                        first_merged_dest = sheet[first_merged_source.coordinate].offset(row=asrow-1)
+
+                        first_merged_dest.value = first_merged_source.value
+                        first_merged_dest.font = Font(bold=first_merged_source.font.bold,
+                                                      color=first_merged_source.font.color)
+
+                        sheet.merge_cells(start_row=first_merged_dest.row,
+                                          start_column=first_merged_dest.column,
+                                          end_row=first_merged_dest.row + merged_range.max_row - merged_range.min_row,
+                                          end_column=first_merged_dest.column + merged_range.max_col - merged_range.min_col)
+                    break
+
+            if not is_merged:
+                dest_sheet_cell.value = source_sheet_cell.value
+                dest_sheet_cell.font = Font(bold=source_sheet_cell.font.bold,
+                                            color=source_sheet_cell.font.color)
+
+    for i in range(0, 12):
+        row_gsmterg = str(asrow)
+        column_gsmterg = chr(64 + 2 + i)
+        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(all_the_people))})'
+
+    cl = sheet.cell(row=asrow+11, column=3)
+    cl.value = f'=COUNT(B2:M{str(asrow)})'
 
     c = sheet['A1']
     c.value = "Zeilenbeschriftungen"
@@ -245,7 +171,6 @@ def final_report():
     c1.value = "RR A."
     c2 = sheet['O1']
     c2.value = "Grund"
-    end_of_report()
 
     for i in range(0, 12):
         sheet_cell = sheet.cell(row=1, column=13 - i)
@@ -272,7 +197,6 @@ def final_report():
             else:
                 sheet_cell = sheet.cell(row=i+1, column=1-month_position)
                 sheet_cell.value = 1
-        print(person.month)
         row_sum = str(i + 1)
         sheet["N" + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
     workbook.save(filename=(f"Qualität_{last_month}_{current_year}.xlsx"))
