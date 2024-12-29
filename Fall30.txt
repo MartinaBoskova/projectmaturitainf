@@ -1,0 +1,45 @@
+ABT SFN st/sv-pfl
+AG-Zu.lfd.3(63)
+Ant.Listenperis P
+Ant.SFN st/sv-pfl
+Ant.SFN sv-pfl.
+Ant.Wo.-Arbeit PK
+BAV St.lfd. 3/63
+DBA/ATE lfd ST
+EFZ-Entgelt DS (3
+Fahrtkosten stpfl
+Grundvergütung
+GV pro Stunde
+GV-Aushilfen Zahl
+GV-Prakt. Ind.
+Inflationsausglei
+Kleidergeld
+Kleidergeld HR
+Kontoführungsgeb.
+Krankentgelt DP
+Krankentgelt DS
+LFZ Zuschlag
+Listenpreis PKW
+MA Zuschlag allg.
+Mehrbereichzul.
+Netto-Hochr.
+persönl. Zulage
+PKW Zahlung gwV
+Prämie NHR
+Reinigungspauscha
+Reinigungspsch.
+Saalzschl.
+Saalzschl. Kasse
+Saalzschlag
+Saalzschlag Kasse
+Stunden
+Taetigkeitszulage
+Urlaubentgelt DS
+VL-AG-Zuschu
+Weihnachtsgeld
+Zlg MuSchu Zuschuß
+Zlg var Zulagen
+Zulage
+Zuschlag Feiertag
+Zuschlag Nacht
+Zuschlag Sonntag
