@@ -150,11 +150,7 @@ def People_classes(x):
     Local_month = list(dict.fromkeys(Local_month))
     Local_lohn = list(dict.fromkeys(Local_lohn))
 
-    for k in Local_lohn:
-        for j in ListFall30:
-            if k == j:
-                person.Fall30 = True
-                break
+    person.Fall30 = any(k in ListFall30 for k in Local_lohn)
 
     person.Month = Local_month
     person.Lohn = Local_lohn
