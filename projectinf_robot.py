@@ -17,51 +17,10 @@ sheet_obj = wb_obj.active
 row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
-list_fall_30 = ["ABT SFN st/sv-pfl",
-                "AG-Zu.lfd.3(63)",
-                "Ant.Listenperis P",
-                "Ant.SFN st/sv-pfl",
-                "Ant.SFN sv-pfl.",
-                "Ant.Wo.-Arbeit PK",
-                "BAV St.lfd. 3/63",
-                "DBA/ATE lfd ST",
-                "EFZ-Entgelt DS (3",
-                "Fahrtkosten stpfl",
-                "Grundvergütung",
-                "GV pro Stunde",
-                "GV-Aushilfen Zahl",
-                "GV-Prakt. Ind.",
-                "Inflationsausglei",
-                "Kleidergeld",
-                "Kleidergeld HR",
-                "Kontoführungsgeb.",
-                "Krankentgelt DP",
-                "Krankentgelt DS",
-                "LFZ Zuschlag",
-                "Listenpreis PKW",
-                "MA Zuschlag allg.",
-                "Mehrbereichzul.",
-                "Netto-Hochr.",
-                "persönl. Zulage",
-                "PKW Zahlung gwV",
-                "Prämie NHR",
-                "Reinigungspauscha",
-                "Reinigungspsch.",
-                "Saalzschl.",
-                "Saalzschl. Kasse",
-                "Saalzschlag",
-                "Saalzschlag Kasse",
-                "Stunden",
-                "Taetigkeitszulage",
-                "Urlaubentgelt DS",
-                "VL-AG-Zuschu",
-                "Weihnachtsgeld",
-                "Zlg MuSchu Zuschuß",
-                "Zlg var Zulagen",
-                "Zulage",
-                "Zuschlag Feiertag",
-                "Zuschlag Nacht",
-                "Zuschlag Sonntag"]
+with open("Fall30.txt", "r") as fall_30:
+    lines_from_text = fall_30.readlines()
+    for i in range(0, len(lines_from_text)):
+        lines_fall_30 = lines_from_text[i].replace("\n", "")
 
 with open('Dummymappe2csv.csv', 'w', newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
@@ -101,7 +60,9 @@ def people_classes(x):
     local_month = list(dict.fromkeys(local_month))
     local_lohn = list(dict.fromkeys(local_lohn))
 
-    person.fall30 = any(k in list_fall_30 for k in local_lohn)
+    person.fall30 = any(k in lines_fall_30 for k in local_lohn)
+
+    print(lines_fall_30, local_lohn, person.fall30)
 
     person.month = local_month
     person.lohn = local_lohn
@@ -133,10 +94,10 @@ def final_report():
             dest_sheet_cell = sheet[cell].offset(row=asrow-1)
             source_sheet_cell = sheet_source[cell]
 
-            is_merged = False
+            merged = False
             for merged_range in sheet_source.merged_cells.ranges:
                 if merged_range.min_row <= source_sheet_cell.row <= merged_range.max_row and merged_range.min_col <= source_sheet_cell.column <= merged_range.max_col:
-                    is_merged = True
+                    merged = True
                     if (source_sheet_cell.row == merged_range.min_row) and (source_sheet_cell.column == merged_range.min_col):
                         first_merged_source = sheet_source.cell(row=merged_range.min_row, column=merged_range.min_col)
                         first_merged_dest = sheet[first_merged_source.coordinate].offset(row=asrow-1)
@@ -151,7 +112,7 @@ def final_report():
                                           end_column=first_merged_dest.column + merged_range.max_col - merged_range.min_col)
                     break
 
-            if not is_merged:
+            if not merged:
                 dest_sheet_cell.value = source_sheet_cell.value
                 dest_sheet_cell.font = Font(bold=source_sheet_cell.font.bold,
                                             color=source_sheet_cell.font.color)
