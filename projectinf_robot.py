@@ -8,6 +8,7 @@ import os
 
 workbook = Workbook()
 
+# Otvírání excel souboru ve formátu "robot"
 print("Please select a file in format: Name.xlsx")
 # path = filename = input()
 path = "Dummymappe2csv.xlsx"
@@ -17,16 +18,19 @@ sheet_obj = wb_obj.active
 row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
+# Textový soubor s Lohnarty jistými pro fall30
 with open("Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
     for i in range(0, len(lines_from_text)):
         lines_fall_30 = lines_from_text[i].replace("\n", "")
 
-with open('Dummymappe2csv.csv', 'w', newline="") as file_handle:
+# Převedení excelu na csv pro snazší použití později
+with open("Dummymappe2csv.csv", "w", newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
     for row in sheet_obj.iter_rows(min_row=2):
         csv_writer.writerow([cell.value for cell in row])
 
+# Vytvoření dictionary ze všech lidí v dokumentu
 with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
     csv_rows = list(csv.reader(f, delimiter=';'))
     people_dict = {int: list}
@@ -39,6 +43,7 @@ with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
 all_the_people = list(dict.fromkeys(people_dict))
 
 
+# Třída každého člověka s důležitým info
 class Person:
     def __init__(self, i_in_people):
         current_person = all_the_people[i_in_people]
@@ -51,6 +56,7 @@ class Person:
 
 
 def people_classes(x):
+    # Počítání a zapisování měsíců, ve krerých byla změna
     person = Person(x)
     local_month = []
     local_lohn = []
@@ -60,21 +66,23 @@ def people_classes(x):
     local_month = list(dict.fromkeys(local_month))
     local_lohn = list(dict.fromkeys(local_lohn))
 
+    # Loop skrz list s jistými fall 30
     person.fall30 = any(k in lines_fall_30 for k in local_lohn)
-
-    print(lines_fall_30, local_lohn, person.fall30)
 
     person.month = local_month
     person.lohn = local_lohn
     return person
 
 
+# Loop skrz všechny lidi
 list_of_People = [Person]
 for i in range(1, len(all_the_people)):
     list_of_People.append(people_classes(i))
 
 
+# Vytvoření výsledného excelu
 def final_report():
+    # Pojmenování excelu podle aktuálního měsíce
     sheet = workbook.active
     month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
     last_month = month_tuple.strftime("%m")
@@ -83,6 +91,7 @@ def final_report():
 
     asrow = 1000+len(all_the_people)
 
+    # Nutná legenda na konci výsledného excelu
     file_name_source = 'End_of_Report.xlsx'
     wb_source = openpyxl.load_workbook(file_name_source)
     sheet_source = wb_source.active
@@ -125,6 +134,7 @@ def final_report():
     cl = sheet.cell(row=asrow+11, column=3)
     cl.value = f'=COUNT(B2:M{str(asrow)})'
 
+    # Nadepsání tabulky s lidmi
     c = sheet['A1']
     c.value = "Zeilenbeschriftungen"
     sheet.column_dimensions['A'].width = 20
@@ -133,6 +143,7 @@ def final_report():
     c2 = sheet['O1']
     c2.value = "Grund"
 
+    # Formátování 12 měsíců do aktuálního měsíce
     for i in range(0, 12):
         sheet_cell = sheet.cell(row=1, column=13 - i)
         if int(last_month) - i >= 1:
@@ -140,6 +151,7 @@ def final_report():
         else:
             sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
 
+    # Formátování získaných dat/výsledků
     for i in range(1, len(all_the_people)):
         person = list_of_People[i]
         sheet_cell = sheet.cell(row=i+1, column=1)
@@ -160,6 +172,7 @@ def final_report():
                 sheet_cell.value = 1
         row_sum = str(i + 1)
         sheet["N" + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
+
     workbook.save(filename=(f"Qualität_{last_month}_{current_year}.xlsx"))
 
 
