@@ -23,6 +23,7 @@ with open("Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
     for i in range(0, len(lines_from_text)):
         lines_fall_30 = lines_from_text[i].replace("\n", "")
+        lines_fall_30 = [line.strip() for line in lines_from_text if line.strip()]
 
 # Převedení excelu na csv pro snazší použití později
 with open("Dummymappe2csv.csv", "w", newline="") as file_handle:
@@ -33,14 +34,14 @@ with open("Dummymappe2csv.csv", "w", newline="") as file_handle:
 # Vytvoření dictionary ze všech lidí v dokumentu
 with open("Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
     csv_rows = list(csv.reader(f, delimiter=';'))
-    people_dict = {int: list}
+    people_dict = {}
     for line in csv_rows:
         if line[1] not in people_dict:
             people_dict[line[1]] = [line]
         else:
             people_dict[line[1]].append(line)
 
-all_the_people = list(dict.fromkeys(people_dict))
+all_the_people = list(people_dict.keys())
 
 
 # Třída každého člověka s důležitým info
@@ -65,9 +66,11 @@ def people_classes(x):
         local_lohn.append(i[11])
     local_month = list(dict.fromkeys(local_month))
     local_lohn = list(dict.fromkeys(local_lohn))
+    local_lohn = [i[11].strip() for i in people_dict[all_the_people[x]] if i[11].strip()]
 
-    # Loop skrz list s jistými fall 30
+    # Loop skrz list s jistým fall 30
     person.fall30 = any(k in lines_fall_30 for k in local_lohn)
+    print(local_lohn, person.fall30)
 
     person.month = local_month
     person.lohn = local_lohn
@@ -75,8 +78,8 @@ def people_classes(x):
 
 
 # Loop skrz všechny lidi
-list_of_People = [Person]
-for i in range(1, len(all_the_people)):
+list_of_People = []
+for i in range(len(all_the_people)):
     list_of_People.append(people_classes(i))
 
 
@@ -87,7 +90,6 @@ def final_report():
     month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
     last_month = month_tuple.strftime("%m")
     current_year = month_tuple.strftime("%y")
-    workbook.save(filename=(f"Qualität_{last_month}_{current_year}.xlsx"))
 
     asrow = 1000+len(all_the_people)
 
@@ -152,25 +154,25 @@ def final_report():
             sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
 
     # Formátování získaných dat/výsledků
-    for i in range(1, len(all_the_people)):
+    for i in range(len(all_the_people)):
         person = list_of_People[i]
-        sheet_cell = sheet.cell(row=i+1, column=1)
+        sheet_cell = sheet.cell(row=i+2, column=1)
         sheet_cell.value = (person.abrk + "/"
                             + person.PN + "/" + person.name)
 
         if person.fall30:
-            sheet_cell1 = sheet.cell(row=i+1, column=15)
+            sheet_cell1 = sheet.cell(row=i+2, column=15)
             sheet_cell1.value = 30
 
         for k in range(0, len(person.month)):
             month_position = int(last_month) - int(person.month[k])
             if month_position >= 0:
-                sheet_cell = sheet.cell(row=i+1, column=13-month_position)
+                sheet_cell = sheet.cell(row=i+2, column=13-month_position)
                 sheet_cell.value = 1
             else:
-                sheet_cell = sheet.cell(row=i+1, column=1-month_position)
+                sheet_cell = sheet.cell(row=i+2, column=1-month_position)
                 sheet_cell.value = 1
-        row_sum = str(i + 1)
+        row_sum = str(i + 2)
         sheet["N" + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
 
     workbook.save(filename=(f"Qualität_{last_month}_{current_year}.xlsx"))
