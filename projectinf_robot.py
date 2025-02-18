@@ -82,15 +82,33 @@ list_of_People = []
 for i in range(len(all_the_people)):
     list_of_People.append(people_classes(i))
 
+# Název výsledného souboru
+for i in range(3):
+    print("If you are making Qualität for this month write 'Yes' if for another write 'No'.")
+    answer = input()
+    # Pojmenování excelu podle aktuálního měsíce
+    if answer == 'Yes':
+        month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
+        last_month = month_tuple.strftime("%m")
+        current_year = month_tuple.strftime("%y")
+        break
+    elif answer == 'No':
+        print("Input the month of the given data in format '01'.")
+        last_month = input()
+        print("Input the year of the given data in format '25'.")
+        current_year = input()
+        break
+    else:
+        print("Invalid input given")
+        if i == 3:
+            exit()
+
+end_name = (f"C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_{last_month}_{current_year}.xlsx")
+
 
 # Vytvoření výsledného excelu
 def final_report():
-    # Pojmenování excelu podle aktuálního měsíce
     sheet = workbook.active
-    month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
-    last_month = month_tuple.strftime("%m")
-    current_year = month_tuple.strftime("%y")
-
     asrow = 1000+len(all_the_people)
 
     # Nutná legenda na konci výsledného excelu
@@ -185,7 +203,7 @@ def final_report():
         row_sum = str(i + 2)
         sheet["N" + row_sum] = f'=SUM(B{row_sum}:M{row_sum})'
 
-    workbook.save(filename=(f"C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_{last_month}_{current_year}.xlsx"))
+    workbook.save(filename=end_name)
 
 
 final_report()
