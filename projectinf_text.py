@@ -21,6 +21,7 @@ with open(f"{path}.csv", "r", encoding="latin-1", newline="") as f:
     csv_rows = list(csv.reader(f, delimiter=';'))
     people_dict = {}
     for line in csv_rows:
+        months_list = line[0]
         if line[1].isspace():
             break
         else:
@@ -29,6 +30,7 @@ with open(f"{path}.csv", "r", encoding="latin-1", newline="") as f:
             else:
                 people_dict[line[1]].append(line)
 print(f"{people_dict}")
+print(f"{months_list}")
 
 all_the_people = list(people_dict.keys())
 

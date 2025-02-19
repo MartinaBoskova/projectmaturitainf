@@ -8,10 +8,11 @@ import os
 
 workbook = Workbook()
 
-# Otvírání excel souboru ve formátu "robot"
-print("Please select a file in format: Name.xlsx")
-# path = filename = input()
+project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
 path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.xlsx"
+# Otvírání excel souboru ve formátu "robot"
+print(f"Please select a file in format: {project_path}Name.xlsx")
+# path = filename = input()
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
@@ -19,20 +20,20 @@ row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
 # Textový soubor s Lohnarty jistými pro fall30
-with open("C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Fall30.txt", "r") as fall_30:
+with open(f"{project_path}Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
     for i in range(0, len(lines_from_text)):
         lines_fall_30 = lines_from_text[i].replace("\n", "")
         lines_fall_30 = [line.strip() for line in lines_from_text if line.strip()]
 
 # Převedení excelu na csv pro snazší použití později
-with open("C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.csv", "w", newline="") as file_handle:
+with open(f"{project_path}Dummymappe2csv.csv", "w", newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
     for row in sheet_obj.iter_rows(min_row=2):
         csv_writer.writerow([cell.value for cell in row])
 
 # Vytvoření dictionary ze všech lidí v dokumentu
-with open("C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.csv", "r", encoding="utf-8-sig", newline="") as f:
+with open(f"{project_path}Dummymappe2csv.csv", "r", encoding="latin-1", newline="") as f:
     csv_rows = list(csv.reader(f, delimiter=';'))
     people_dict = {}
     for line in csv_rows:
@@ -84,7 +85,7 @@ for i in range(len(all_the_people)):
 
 # Název výsledného souboru
 for i in range(3):
-    print("If you are making Qualität for this month write 'Yes' if for another write 'No'.")
+    print("Are you making Qualität for this month write: 'Yes'. For another write: 'No'.")
     answer = input()
     # Pojmenování excelu podle aktuálního měsíce
     if answer == 'Yes':
@@ -100,10 +101,11 @@ for i in range(3):
         break
     else:
         print("Invalid input given")
-        if i == 3:
+        if i == 2:
+            print("Invalid input given three times - Program ends.")
             exit()
 
-end_name = (f"C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_{last_month}_{current_year}.xlsx")
+end_name = (f"{project_path}Qualität_{last_month}_{current_year}.xlsx")
 
 
 # Vytvoření výsledného excelu
@@ -112,7 +114,7 @@ def final_report():
     asrow = 1000+len(all_the_people)
 
     # Nutná legenda na konci výsledného excelu
-    file_name_source = 'C:/Users/Martina/Desktop/škola/informatika/git.projectinf/End_of_Report.xlsx'
+    file_name_source = f'{project_path}End_of_Report.xlsx'
     wb_source = openpyxl.load_workbook(file_name_source)
     sheet_source = wb_source.active
 
@@ -157,12 +159,13 @@ def final_report():
 
     # Anzahl hodnoty
     for i in range(0, 9):
+        row_lngth = len(all_the_people)
         row_strmln = str(asrow + 15 + i)
-        sheet['C' + row_strmln] = f'=SUMIF(N2:N{str(len(all_the_people))}, B{row_strmln}, O2:O{str(len(all_the_people)+1)})'
+        sheet['C' + row_strmln] = f'=SUMIF(N2:N{str(row_lngth)}, B{row_strmln}, O2:O{str(row_lngth+1)})'
 
     for i in range(0, 9):
         row_strmln = str(asrow + 27 + i)
-        sheet['C' + row_strmln] = f'=SUMIF(N2:N{str(len(all_the_people))}, B{row_strmln}, O2:O{str(len(all_the_people)+1)})'
+        sheet['C' + row_strmln] = f'=SUMIF(N2:N{str(row_lngth)}, B{row_strmln}, O2:O{str(row_lngth+1)})'
 
     # Nadepsání tabulky s lidmi
     c = sheet['A1']
@@ -176,10 +179,12 @@ def final_report():
     # Formátování 12 měsíců do aktuálního měsíce
     for i in range(0, 12):
         sheet_cell = sheet.cell(row=1, column=13 - i)
-        if int(last_month) - i >= 1:
-            sheet_cell.value = str(int(last_month) - i) + "/" + current_year
+        l_m_int = int(last_month)
+        c_y_int = int(current_year)
+        if l_m_int - i >= 1:
+            sheet_cell.value = str(l_m_int - i) + "/" + current_year
         else:
-            sheet_cell.value = str((int(last_month) + 12) - i) + "/" + str(int(current_year) - 1)
+            sheet_cell.value = str((l_m_int + 12) - i) + "/" + str(c_y_int - 1)
 
     # Formátování získaných dat/výsledků
     for i in range(len(all_the_people)):
@@ -207,4 +212,4 @@ def final_report():
 
 
 final_report()
-os.remove("C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.csv")
+os.remove(f"{project_path}Dummymappe2csv.csv")
