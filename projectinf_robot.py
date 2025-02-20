@@ -123,31 +123,34 @@ def final_report():
     for row in rows_from_range(range_str):
         for cell in row:
             dest_sheet_cell = sheet[cell].offset(row=asrow-1)
-            source_sheet_cell = sheet_source[cell]
+            source_cell = sheet_source[cell]
 
             merged = False
             for merged_range in sheet_source.merged_cells.ranges:
-                if merged_range.min_row <= source_sheet_cell.row <= merged_range.max_row and merged_range.min_col <= source_sheet_cell.column <= merged_range.max_col:
+                min_row = merged_range.min_row
+                min_col = merged_range.min_col
+                max_col = merged_range.max_col
+                max_row = merged_range.max_row
+                if min_row <= source_cell.row <= max_row and min_col <= source_cell.column <= max_col:
                     merged = True
-                    if (source_sheet_cell.row == merged_range.min_row) and (source_sheet_cell.column == merged_range.min_col):
-                        first_merged_source = sheet_source.cell(row=merged_range.min_row, column=merged_range.min_col)
-                        first_merged_dest = sheet[first_merged_source.coordinate].offset(row=asrow-1)
+                    if (source_cell.row == min_row) and (source_cell.column == min_col):
+                        m_source = sheet_source.cell(row=min_row, column=min_col)
+                        m_dest = sheet[m_source.coordinate].offset(row=asrow-1)
 
-                        first_merged_dest.value = first_merged_source.value
-                        first_merged_dest.font = Font(bold=first_merged_source.font.bold,
-                                                      color=first_merged_source.font.color)
+                        m_dest.value = m_source.value
+                        m_dest.font = Font(bold=m_source.font.bold,
+                                           color=m_source.font.color)
 
-                        sheet.merge_cells(start_row=first_merged_dest.row,
-                                          start_column=first_merged_dest.column,
-                                          end_row=first_merged_dest.row + merged_range.max_row - merged_range.min_row,
-                                          end_column=first_merged_dest.column + merged_range.max_col - merged_range.min_col)
+                        sheet.merge_cells(start_row=m_dest.row,
+                                          start_column=m_dest.column,
+                                          end_row=m_dest.row + max_row - min_row,
+                                          end_column=m_dest.column + max_col - min_col)
                     break
 
             if not merged:
-                dest_sheet_cell.value = source_sheet_cell.value
-                dest_sheet_cell.font = Font(bold=source_sheet_cell.font.bold,
-                                            color=source_sheet_cell.font.color)
-
+                dest_sheet_cell.value = source_cell.value
+                dest_sheet_cell.font = Font(bold=source_cell.font.bold,
+                                            color=source_cell.font.color)
     # Gesamtergebnis hodnoty
     for i in range(0, 12):
         row_gsmterg = str(asrow)
