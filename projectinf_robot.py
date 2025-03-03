@@ -19,6 +19,16 @@ sheet_obj = wb_obj.active
 row_number = sheet_obj.max_row
 column_number = sheet_obj.max_column
 
+l_fall30_vers = ["AN Arbeitslosenve",
+                 "AN Krankenvers.",
+                 "AN Plegeversich.",
+                 "AN Renteversich."]
+
+l_fall_27 = ["AG Pauschsteuer",
+             "AN Pauschsteuer",
+             "Kirchensteuer",
+             "Lohnsteuer"]
+
 # Textový soubor s Lohnarty jistými pro fall30
 with open(f"{project_path}Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
@@ -55,6 +65,7 @@ class Person:
         self.month = []
         self.lohn = []
         self.fall30 = False
+        self.fall27 = False
 
 
 def people_classes(x):
@@ -66,12 +77,21 @@ def people_classes(x):
         local_month.append(i[3])
         local_lohn.append(i[11])
     local_month = list(dict.fromkeys(local_month))
-    local_lohn = list(dict.fromkeys(local_lohn))
     local_lohn = [i[11].strip() for i in people_dict[all_the_people[x]] if i[11].strip()]
 
     # Loop skrz list s jistým fall 30
     person.fall30 = any(k in lines_fall_30 for k in local_lohn)
     print(local_lohn, person.fall30)
+
+    if person.fall30 is False:
+        if any(k in l_fall30_vers for k in local_lohn) and not i[13] == "":
+            person.fall30 = True
+            print(local_lohn, person.fall30)
+
+    if person.fall30 is False:
+        if any(k in l_fall_27 for k in local_lohn) and not i[13] == "":
+            person.fall27 = True
+            print(local_lohn, person.fall30, person.fall27)
 
     person.month = local_month
     person.lohn = local_lohn
@@ -212,6 +232,10 @@ def final_report():
         if person.fall30:
             sheet_cell1 = sheet.cell(row=i+2, column=15)
             sheet_cell1.value = 30
+        
+        if person.fall27:
+            sheet_cell1 = sheet.cell(row=i+2, column=15)
+            sheet_cell1.value = 27
 
         for k in range(0, len(person.month)):
             month_position = int(last_month) - int(person.month[k])
