@@ -83,27 +83,40 @@ list_of_People = []
 for i in range(len(all_the_people)):
     list_of_People.append(people_classes(i))
 
+
+def not_valid():
+    print("Invalid input given")
+    if i == 2:
+        print("Invalid input given three times - Program ends.")
+        exit()
+
+
 # Název výsledného souboru
 for i in range(3):
-    print("Are you making Qualität for this month write: 'Yes'. For another write: 'No'.")
+    print("Are you making Qualität for this month write: Y/n")
     answer = input()
     # Pojmenování excelu podle aktuálního měsíce
-    if answer == 'Yes':
+    if answer == 'Y':
         month_tuple = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
         last_month = month_tuple.strftime("%m")
         current_year = month_tuple.strftime("%y")
         break
-    elif answer == 'No':
+    elif answer == 'n':
         print("Input the month of the given data in format '01'.")
         last_month = input()
-        print("Input the year of the given data in format '25'.")
-        current_year = input()
-        break
+        try:
+            month_input = int(last_month)
+        except ValueError:
+            not_valid()
+        else:
+            print("Input the year of the given data in format '25'.")
+            current_year = input()
+            try:
+                year_input = int(current_year)
+            except ValueError:
+                not_valid()
     else:
-        print("Invalid input given")
-        if i == 2:
-            print("Invalid input given three times - Program ends.")
-            exit()
+        not_valid()
 
 end_name = (f"{project_path}Qualität_{last_month}_{current_year}.xlsx")
 
