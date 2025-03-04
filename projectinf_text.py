@@ -38,16 +38,38 @@ print(f"{months_list}")
 all_the_people = list(people_dict.keys())
 
 
+def what_month(person):
+    months = []
+    for i in range(1, 13):
+        if person[i].isspace() or person[i] == "":
+            pass
+        elif person[i] == "1":
+            local_month = months_list[i]
+            months.append(local_month)
+        else:
+            print("Error has ocured program will end. (check values in months)")
+            exit()
+    months.reverse()
+    return months
+
+
 # Třída každého člověka s důležitým info
 class Person:
     def __init__(self, i_in_people):
         current_person = all_the_people[i_in_people]
-        self.abrk = people_dict[current_person][0][0]
-        self.name = people_dict[current_person][0][2]
-        self.PN = people_dict[current_person][0][1]
-        self.month = []
-        self.lohn = []
+        separate = people_dict[current_person][0][0].split("/")
+        self.abrk = separate[0]
+        self.name = separate[2]
+        self.PN = separate[1]
         self.fall30 = False
+        self.fall27 = False
+        self.month = what_month(people_dict[current_person][0])
 
 
+# Loop skrz všechny lidi
+list_of_People = []
+for i in range(1, len(all_the_people)):
+    list_of_People.append(Person(i))
+
+print(f"{list_of_People[1].month}")
 os.remove(f"{project_path}Qualität_01_25.xlsx.csv")

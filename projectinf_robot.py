@@ -83,11 +83,13 @@ def people_classes(x):
     person.fall30 = any(k in lines_fall_30 for k in local_lohn)
     print(local_lohn, person.fall30)
 
+    # Loop skrz list s versicherung a procenta
     if person.fall30 is False:
         if any(k in l_fall30_vers for k in local_lohn) and not i[13] == "":
             person.fall30 = True
             print(local_lohn, person.fall30)
 
+    # Loop skrz list s steuerung a procenta
     if person.fall30 is False:
         if any(k in l_fall_27 for k in local_lohn) and not i[13] == "":
             person.fall27 = True
@@ -232,7 +234,7 @@ def final_report():
         if person.fall30:
             sheet_cell1 = sheet.cell(row=i+2, column=15)
             sheet_cell1.value = 30
-        
+
         if person.fall27:
             sheet_cell1 = sheet.cell(row=i+2, column=15)
             sheet_cell1.value = 27
