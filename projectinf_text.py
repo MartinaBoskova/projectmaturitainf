@@ -13,6 +13,10 @@ path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
+print(f"Please select a file in format: {project_path}Name.txt")
+text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
+# text_path = filename = input()
+
 # Převedení na csv
 with open(f"{path}.csv", "w", newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
@@ -61,6 +65,8 @@ class Person:
         self.abrk = separate[0]
         self.name = separate[2]
         self.PN = separate[1]
+        self.find = f"{separate[0]}/{separate[1]}"
+        self.found = False
         self.fall30 = False
         self.fall27 = False
         self.month = what_month(people_dict[current_person][0])
@@ -71,5 +77,13 @@ list_of_People = []
 for i in range(1, len(all_the_people)):
     list_of_People.append(Person(i))
 
-print(f"{list_of_People[1].month}")
+with open(f"{text_path}", "r") as f:
+    text_rows = f.readlines()
+    for person in list_of_People:
+        for line in text_rows:
+            if f"{person.find}" in line:
+                print("yay")
+                person.found = True
+
+print(f"{list_of_People[1].found}")
 os.remove(f"{project_path}Qualität_01_25.xlsx.csv")
