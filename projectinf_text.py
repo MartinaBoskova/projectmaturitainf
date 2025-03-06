@@ -48,7 +48,13 @@ def what_month(person):
         if person[i].isspace() or person[i] == "":
             pass
         elif person[i] == "1":
-            local_month = months_list[i]
+            separate = months_list[i].split("/")
+            month = int(separate[0])
+            if month < 10:
+                separate.pop(0)
+                separate.insert(0, f"0{month}")
+            month_in_format = ".".join(separate)
+            local_month = month_in_format
             months.append(local_month)
         else:
             print("Error has ocured program will end. (check values in months)")
@@ -80,10 +86,16 @@ for i in range(1, len(all_the_people)):
 with open(f"{text_path}", "r") as f:
     text_rows = f.readlines()
     for person in list_of_People:
-        for line in text_rows:
+        for line, month_line in zip(text_rows[4:], text_rows):
             if f"{person.find}" in line:
                 print("yay")
+                if f"{person.month[0]}" in month_line:
+                    print("more yay")
                 person.found = True
+
+for person in list_of_People:
+    if person.found is False:
+        print(f"Error. Person {person.PN} not found in text file.")
 
 print(f"{list_of_People[1].found}")
 os.remove(f"{project_path}Qualität_01_25.xlsx.csv")
