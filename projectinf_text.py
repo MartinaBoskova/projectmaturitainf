@@ -2,24 +2,52 @@ import openpyxl
 import csv
 import os
 
+
+def not_valid():
+    print("Invalid input given")
+    if i == 4:
+        print("Invalid input given five times - Program ends.")
+        exit()
+
+
 # Otvírání excel souboru ve formátu konečný report nevyplněný
 project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
-print(f"Please select a file in format: {project_path}Name.xlsx")
-# path = filename = input()
-path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
+for i in range(5):
+    print(f"Please select a file in format: {project_path}Name.xlsx")
+    path = input()
+    try:
+        if not path.endswith(".xlsx"):
+            raise ValueError()
+        with open(path, "r") as f:
+            pass
+        break
+    except ValueError:
+        not_valid()
+# path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
 wb_obj = openpyxl.load_workbook(path)
 sheet_obj = wb_obj.active
 
-print(f"Please select a file in format: {project_path}Name.txt")
-text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
-# text_path = filename = input()
+# Otvírání textového souboru ve formátu výplatnice
+for i in range(5):
+    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
+    text_path = input()
+    try:
+        if not text_path.endswith(".txt"):
+            raise ValueError()
+        with open(text_path, "r") as f:
+            pass
+        break
+    except ValueError:
+        not_valid()
+# text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
 
-# Převedení na csv
+# Převedení excelu na csv
 with open(f"{path}.csv", "w", newline="") as file_handle:
     csv_writer = csv.writer(file_handle, delimiter=";")
     for row in sheet_obj.iter_rows():
         csv_writer.writerow([cell.value for cell in row])
 
+# Vytváření listu z daných Fallů 30
 with open(f"{project_path}Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
     for i in range(0, len(lines_from_text)):
@@ -39,12 +67,11 @@ with open(f"{path}.csv", "r", encoding="latin-1", newline="") as f:
                 people_dict[line[0]] = [line]
             else:
                 people_dict[line[0]].append(line)
-print(people_dict)
-print(months_list)
 
 all_the_people = list(people_dict.keys())
 
 
+# Vytvoření stringu ve formátu na hledání v txt. souboru
 def what_month(person):
     months = []
     for i in range(1, 13):
@@ -57,8 +84,7 @@ def what_month(person):
                 separate.pop(0)
                 separate.insert(0, f"0{month}")
             month_in_format = ".".join(separate) + "/"
-            local_month = month_in_format
-            months.append(local_month)
+            months.append(month_in_format)
         else:
             print("Error has ocured program will end. (check values in months)")
             exit()
@@ -86,6 +112,7 @@ list_of_People = []
 for i in range(1, len(all_the_people)):
     list_of_People.append(Person(i))
 
+# Projíždění skrz textový soubor pro každého člověka
 with open(f"{text_path}", "r") as f:
     dash = "-----"
     text_rows = f.readlines()
@@ -97,27 +124,26 @@ with open(f"{text_path}", "r") as f:
                     if f"{person.month[0]}" in text_rows[line - 4]:
                         while dash not in text_rows[line]:
                             line = line + 1
-                        else:
+                        line = line - 1
+                        # Pro nalezenou výplatnici prohlížení jasného fallu 30
+                        while person.fall30 is False and dash not in text_rows[line]:
+                            lohnart = text_rows[line][:17]
+                            person.fall30 = any(k in lohnart for k in lines_fall_30)
                             line = line - 1
-                            while person.fall30 is False and dash not in text_rows[line]:
-                                lohnart = text_rows[line][:17]
-                                person.fall30 = any(k in lohnart for k in lines_fall_30)
-                                line = line - 1
-                                print(person.PN, person.fall30)
-                            else:
-                                continue
+                        continue
             else:
                 continue
 
+# Zapsání výsledků do konečného reportu
 for i in range(0, len(list_of_People)):
     grund_cell = sheet_obj[f"O{i+2}"]
     person = list_of_People[i]
-    print(person.fall30)
     if person.fall30 is True:
         grund_cell.value = "30"
     if person.fall27 is True:
         grund_cell.value = "27"
 
+# Vypsání nenalezených lidí
 for person in list_of_People:
     if person.found is False:
         print(f"Error. Person {person.PN} not found in text file.")

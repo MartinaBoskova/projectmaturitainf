@@ -108,13 +108,13 @@ for i in range(len(all_the_people)):
 
 def not_valid():
     print("Invalid input given")
-    if i == 2:
-        print("Invalid input given three times - Program ends.")
+    if i == 4:
+        print("Invalid input given five times - Program ends.")
         exit()
 
 
 # Název výsledného souboru
-for i in range(3):
+for i in range(5):
     print("Are you making Qualität for this month write: Y/n")
     answer = input()
     # Pojmenování excelu podle aktuálního měsíce
