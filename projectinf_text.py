@@ -1,5 +1,4 @@
 import openpyxl
-from openpyxl import Workbook
 import csv
 import os
 
@@ -88,6 +87,7 @@ for i in range(1, len(all_the_people)):
     list_of_People.append(Person(i))
 
 with open(f"{text_path}", "r") as f:
+    dash = "-----"
     text_rows = f.readlines()
     for person in list_of_People:
         for line in range(0, len(text_rows)):
@@ -95,11 +95,11 @@ with open(f"{text_path}", "r") as f:
                 if f"{person.find}" in text_rows[line]:
                     person.found = True
                     if f"{person.month[0]}" in text_rows[line - 4]:
-                        while "-----" not in text_rows[line]:
+                        while dash not in text_rows[line]:
                             line = line + 1
                         else:
                             line = line - 1
-                            while person.fall30 is False and "-----" not in text_rows[line]:
+                            while person.fall30 is False and dash not in text_rows[line]:
                                 lohnart = text_rows[line][:17]
                                 person.fall30 = any(k in lohnart for k in lines_fall_30)
                                 line = line - 1
