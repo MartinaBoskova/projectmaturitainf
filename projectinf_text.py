@@ -24,7 +24,7 @@ for i in range(5):
     except ValueError:
         not_valid()
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
-wb_obj = openpyxl.load_workbook(path)
+wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
 # Otvírání textového souboru ve formátu výplatnice
@@ -48,7 +48,7 @@ with open(f"{path}.csv", "w", newline="") as file_handle:
         csv_writer.writerow([cell.value for cell in row])
 
 # Vytváření listu z daných Fallů 30
-with open(f"{project_path}Fall30.txt", "r") as fall_30:
+with open("Fall30.txt", "r") as fall_30:
     lines_from_text = fall_30.readlines()
     for i in range(0, len(lines_from_text)):
         lines_fall_30 = lines_from_text[i].replace("\n", "")
@@ -138,6 +138,7 @@ with open(f"{text_path}", "r") as f:
 for i in range(0, len(list_of_People)):
     grund_cell = sheet_obj[f"O{i+2}"]
     person = list_of_People[i]
+
     if person.fall30 is True:
         grund_cell.value = "30"
     if person.fall27 is True:
