@@ -34,7 +34,7 @@ Saalzschlag
 Saalzschlag Kasse
 Stunden
 Taetigkeitszulage
-Urlaubentgelt DS
+Urlaubsentgelt DS
 VL-AG-Zuschu
 Weihnachtsgeld
 Zlg MuSchu Zuschuß
