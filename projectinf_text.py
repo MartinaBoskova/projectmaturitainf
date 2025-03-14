@@ -13,43 +13,33 @@ l_fall_27 = ["AG Pauschsteuer",
              "Lohnsteuer"]
 
 
-def not_valid():
-    print("Invalid input given")
-    if i == 4:
-        print("Invalid input given five times - Program ends.")
-        exit()
+def not_valid(end):
+    for i in range(5):
+        print(f"Please select a file in format: C:/example/of/path/Name{end}")
+        end_path = input()
+        try:
+            if not end_path.endswith(end):
+                raise ValueError()
+            with open(end_path, "r"):
+                pass
+            return end_path
+        except ValueError:
+            print("Invalid input given")
+        if i == 4:
+            print("Error: Invalid input given five times - Program ends.")
+            exit()
 
 
 # Otvírání excel souboru ve formátu konečný report nevyplněný
-project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
-for i in range(5):
-    print(f"Please select a file in format: {project_path}Name.xlsx")
-    path = input()
-    try:
-        if not path.endswith(".xlsx"):
-            raise ValueError()
-        with open(path, "r") as f:
-            pass
-        break
-    except ValueError:
-        not_valid()
+path = not_valid(".xlsx")
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
+copy_obj = wb_obj.copy_worksheet(sheet_obj)
 
 # Otvírání textového souboru ve formátu výplatnice
 # text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
-for i in range(5):
-    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
-    text_path = input()
-    try:
-        if not text_path.endswith(".txt"):
-            raise ValueError()
-        with open(text_path, "r") as f:
-            pass
-        break
-    except ValueError:
-        not_valid()
+text_path = not_valid(".txt")
 
 # Převedení excelu na csv
 with open(f"{path}.csv", "w", newline="") as file_handle:
@@ -134,7 +124,7 @@ with open(f"{text_path}", "r") as f:
                         person.found = True
                         while dash not in text_rows[line]:
                             line = line + 1
-                        first_dash = line + 1
+                        frst_dash = line + 1
                         line = line - 1
                         # Pro nalezenou výplatnici prohlížení jasného fallu 30
                         while person.fall30 is False and dash not in text_rows[line]:
@@ -142,9 +132,9 @@ with open(f"{text_path}", "r") as f:
                             person.fall30 = any(k in lohnart for k in lines_fall_30)
                             line = line - 1
                         # Pro nalezenou výplatnici prohlížení fallu 30 a fallu 27
-                        while person.fall30 is False and dash not in text_rows[first_dash]:
-                            first_dash = first_dash + 1
-                        scnd_dash = first_dash + 1
+                        while person.fall30 is False and dash not in text_rows[frst_dash]:
+                            frst_dash = frst_dash + 1
+                        scnd_dash = frst_dash + 1
                         while person.fall30 is False and dash not in text_rows[scnd_dash]:
                             lohnart = text_rows[scnd_dash][:17]
                             vers = any(k in lohnart for k in l_fall30_vers)
@@ -168,7 +158,7 @@ with open(f"{text_path}", "r") as f:
 
 # Zapsání výsledků do konečného reportu
 for i in range(0, len(list_of_People)):
-    grund_cell = sheet_obj[f"O{i+2}"]
+    grund_cell = copy_obj[f"O{i+2}"]
     person = list_of_People[i]
 
     if person.fall30 is True:

@@ -17,27 +17,31 @@ l_fall_27 = ["AG Pauschsteuer",
              "Lohnsteuer"]
 
 
-def not_valid():
-    print("Invalid input given")
+def invalid():
     if i == 4:
-        print("Invalid input given five times - Program ends.")
+        print("Error: Invalid input given five times - Program ends.")
         exit()
+
+
+def not_valid(end):
+    for i in range(5):
+        print(f"Please select a file in format: C:/example/of/path/Name{end}")
+        end_path = input()
+        try:
+            if not end_path.endswith(end):
+                raise ValueError()
+            with open(end_path, "r"):
+                pass
+            return end_path
+        except ValueError:
+            print("Invalid input given")
+        invalid()
 
 
 workbook = Workbook()
 # Otvírání excel souboru ve formátu "robot"
-project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
-for i in range(5):
-    print(f"Please select a file in format: {project_path}Name.xlsx")
-    path = input()
-    try:
-        if not path.endswith(".xlsx"):
-            raise ValueError()
-        with open(path, "r") as f:
-            pass
-        break
-    except ValueError:
-        not_valid()
+project_path = os.getcwd()
+path = not_valid(".xlsx")
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.xlsx"
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
@@ -137,16 +141,16 @@ for i in range(5):
         try:
             month_input = int(last_month)
         except ValueError:
-            not_valid()
+            invalid()
         else:
             print("Input the year of the given data in format '25'.")
             current_year = input()
             try:
                 year_input = int(current_year)
             except ValueError:
-                not_valid()
+                invalid()
     else:
-        not_valid()
+        invalid()
 
 end_name = (f"{project_path}Qualität_{last_month}_{current_year}.xlsx")
 
@@ -196,7 +200,8 @@ def final_report():
     for i in range(0, 12):
         row_gsmterg = str(asrow)
         column_gsmterg = chr(64 + 2 + i)
-        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{str(len(all_the_people)+1)})'
+        nmbr_people = str(len(all_the_people)+1)
+        sheet[column_gsmterg + row_gsmterg] = f'=SUM({column_gsmterg}2:{column_gsmterg}{nmbr_people})'
 
     cl = sheet.cell(row=asrow+11, column=3)
     cl.value = f'=COUNT(B2:M{str(asrow-1)})'
