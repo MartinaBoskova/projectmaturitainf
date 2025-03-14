@@ -1,6 +1,7 @@
 import openpyxl
 import csv
 import os
+import sys
 
 l_fall30_vers = ["AN Arbeitslosenve",
                  "AN Krankenvers.",
@@ -32,7 +33,8 @@ def not_valid(end):
 
 # Otvírání excel souboru ve formátu konečný report nevyplněný
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
-path = not_valid(".xlsx")
+# path = not_valid(".xlsx")
+path = sys.argv[1]
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 copy_obj = wb_obj.copy_worksheet(sheet_obj)

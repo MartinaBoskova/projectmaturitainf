@@ -5,6 +5,7 @@ from openpyxl.utils import rows_from_range
 import datetime
 import csv
 import os
+import sys
 
 l_fall30_vers = ["AN Arbeitslosenve",
                  "AN Krankenvers.",
@@ -17,7 +18,7 @@ l_fall_27 = ["AG Pauschsteuer",
              "Lohnsteuer"]
 
 
-def invalid():
+def invalid(i):
     if i == 4:
         print("Error: Invalid input given five times - Program ends.")
         exit()
@@ -35,13 +36,14 @@ def not_valid(end):
             return end_path
         except ValueError:
             print("Invalid input given")
-        invalid()
+        invalid(i)
 
 
 workbook = Workbook()
 # Otvírání excel souboru ve formátu "robot"
 project_path = os.getcwd()
-path = not_valid(".xlsx")
+# path = not_valid(".xlsx")
+path = sys.argv[1]
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.xlsx"
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
@@ -141,16 +143,16 @@ for i in range(5):
         try:
             month_input = int(last_month)
         except ValueError:
-            invalid()
+            invalid(i)
         else:
             print("Input the year of the given data in format '25'.")
             current_year = input()
             try:
                 year_input = int(current_year)
             except ValueError:
-                invalid()
+                invalid(i)
     else:
-        invalid()
+        invalid(i)
 
 end_name = (f"{project_path}Qualität_{last_month}_{current_year}.xlsx")
 
