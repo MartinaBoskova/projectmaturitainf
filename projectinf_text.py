@@ -2,6 +2,16 @@ import openpyxl
 import csv
 import os
 
+l_fall30_vers = ["AN Arbeitslosenve",
+                 "AN Krankenvers.",
+                 "AN Plegeversich.",
+                 "AN Rentenversich."]
+
+l_fall_27 = ["AG Pauschsteuer",
+             "AN Pauschsteuer",
+             "Kirchensteuer",
+             "Lohnsteuer"]
+
 
 def not_valid():
     print("Invalid input given")
@@ -12,34 +22,34 @@ def not_valid():
 
 # Otvírání excel souboru ve formátu konečný report nevyplněný
 project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
-for i in range(5):
-    print(f"Please select a file in format: {project_path}Name.xlsx")
-    path = input()
-    try:
-        if not path.endswith(".xlsx"):
-            raise ValueError()
-        with open(path, "r") as f:
-            pass
-        break
-    except ValueError:
-        not_valid()
-# path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
+path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
+#for i in range(5):
+#    print(f"Please select a file in format: {project_path}Name.xlsx")
+#    path = input()
+#    try:
+#        if not path.endswith(".xlsx"):
+#            raise ValueError()
+#        with open(path, "r") as f:
+#            pass
+#        break
+#    except ValueError:
+#        not_valid()
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
 # Otvírání textového souboru ve formátu výplatnice
-for i in range(5):
-    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
-    text_path = input()
-    try:
-        if not text_path.endswith(".txt"):
-            raise ValueError()
-        with open(text_path, "r") as f:
-            pass
-        break
-    except ValueError:
-        not_valid()
-# text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
+text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
+#for i in range(5):
+#    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
+#    text_path = input()
+#    try:
+#        if not text_path.endswith(".txt"):
+#            raise ValueError()
+#        with open(text_path, "r") as f:
+#            pass
+#        break
+#    except ValueError:
+#        not_valid()
 
 # Převedení excelu na csv
 with open(f"{path}.csv", "w", newline="") as file_handle:
@@ -120,16 +130,38 @@ with open(f"{text_path}", "r") as f:
         for line in range(0, len(text_rows)):
             if person.found is False:
                 if f"{person.find}" in text_rows[line]:
-                    person.found = True
                     if f"{person.month[0]}" in text_rows[line - 4]:
+                        person.found = True
                         while dash not in text_rows[line]:
                             line = line + 1
+                        first_dash = line + 1
                         line = line - 1
                         # Pro nalezenou výplatnici prohlížení jasného fallu 30
                         while person.fall30 is False and dash not in text_rows[line]:
                             lohnart = text_rows[line][:17]
                             person.fall30 = any(k in lohnart for k in lines_fall_30)
                             line = line - 1
+                        # Pro nalezenou výplatnici prohlížení fallu 30 a fallu 27
+                        while person.fall30 is False and dash not in text_rows[first_dash]:
+                            first_dash = first_dash + 1
+                        scnd_dash = first_dash + 1
+                        while person.fall30 is False and dash not in text_rows[scnd_dash]:
+                            lohnart = text_rows[scnd_dash][:17]
+                            vers = any(k in lohnart for k in l_fall30_vers)
+                            steuer = any(k in lohnart for k in l_fall_27)
+                            if vers is True:
+                                if text_rows[scnd_dash][38].isspace() or text_rows[scnd_dash][38] == "":
+                                    scnd_dash = scnd_dash + 1
+                                else:
+                                    person.fall30 = True
+                            if steuer is True:
+                                if text_rows[scnd_dash][38].isspace() or text_rows[scnd_dash][38] == "":
+                                    scnd_dash = scnd_dash + 1
+                                else:
+                                    person.fall27 = True
+                                    scnd_dash = scnd_dash + 1
+                            else:
+                                scnd_dash = scnd_dash + 1
                         continue
             else:
                 continue
@@ -141,7 +173,7 @@ for i in range(0, len(list_of_People)):
 
     if person.fall30 is True:
         grund_cell.value = "30"
-    if person.fall27 is True:
+    if person.fall30 is False and person.fall27 is True:
         grund_cell.value = "27"
 
 # Vypsání nenalezených lidí
