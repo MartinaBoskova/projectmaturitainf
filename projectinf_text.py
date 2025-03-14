@@ -22,34 +22,34 @@ def not_valid():
 
 # Otvírání excel souboru ve formátu konečný report nevyplněný
 project_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/"
-path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
-#for i in range(5):
-#    print(f"Please select a file in format: {project_path}Name.xlsx")
-#    path = input()
-#    try:
-#        if not path.endswith(".xlsx"):
-#            raise ValueError()
-#        with open(path, "r") as f:
-#            pass
-#        break
-#    except ValueError:
-#        not_valid()
+# path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
+for i in range(5):
+    print(f"Please select a file in format: {project_path}Name.xlsx")
+    path = input()
+    try:
+        if not path.endswith(".xlsx"):
+            raise ValueError()
+        with open(path, "r") as f:
+            pass
+        break
+    except ValueError:
+        not_valid()
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 
 # Otvírání textového souboru ve formátu výplatnice
-text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
-#for i in range(5):
-#    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
-#    text_path = input()
-#    try:
-#        if not text_path.endswith(".txt"):
-#            raise ValueError()
-#        with open(text_path, "r") as f:
-#            pass
-#        break
-#    except ValueError:
-#        not_valid()
+# text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
+for i in range(5):
+    print(f"Please select a file with payrolls in format: {project_path}Name.txt")
+    text_path = input()
+    try:
+        if not text_path.endswith(".txt"):
+            raise ValueError()
+        with open(text_path, "r") as f:
+            pass
+        break
+    except ValueError:
+        not_valid()
 
 # Převedení excelu na csv
 with open(f"{path}.csv", "w", newline="") as file_handle:
@@ -179,7 +179,7 @@ for i in range(0, len(list_of_People)):
 # Vypsání nenalezených lidí
 for person in list_of_People:
     if person.found is False:
-        print(f"Error. Person {person.PN} not found in text file.")
+        print(f"Error. Person {person.PN} or payroll with last month not found in text file.")
 
 wb_obj.save(path)
 os.remove(f"{path}.csv")
