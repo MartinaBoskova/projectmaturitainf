@@ -40,11 +40,12 @@ def not_valid(end):
 
 
 workbook = Workbook()
+# path = not_valid(".xlsx")
+# path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.xlsx"
+
 # Otvírání excel souboru ve formátu "robot"
 project_path = os.getcwd()
-# path = not_valid(".xlsx")
 path = sys.argv[1]
-# path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Dummymappe2csv.xlsx"
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 row_number = sheet_obj.max_row
@@ -265,4 +266,5 @@ def final_report():
 
 
 final_report()
+print("You should be able to find the final report in this folder.")
 os.remove(f"{path}.csv")

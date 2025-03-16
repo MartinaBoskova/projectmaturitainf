@@ -28,7 +28,7 @@ def decision():
     elif sheet_obj['A1'].value == "Firma":
         return f"{project_path}/projectinf_robot.py"
     else:
-        print("Error. File given in wrong format.")
+        print("Error. File given in wrong format - Program ends.")
         exit()
 
 
@@ -41,4 +41,4 @@ sheet_obj = wb_obj.active
 
 # Zahájení dalšího scriptu - předání inputu
 decided_script = decision()
-subprocess.run(["python", decided_script, path])
+subprocess.run([f"{project_path}/venv/scripts/python.exe", decided_script, path])

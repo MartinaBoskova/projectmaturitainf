@@ -31,16 +31,17 @@ def not_valid(end):
             exit()
 
 
-# Otvírání excel souboru ve formátu konečný report nevyplněný
 # path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/Qualität_01_25.xlsx"
 # path = not_valid(".xlsx")
+
+# Otvírání excel souboru ve formátu konečný report nevyplněný
 path = sys.argv[1]
 wb_obj = openpyxl.load_workbook(path, data_only=True)
 sheet_obj = wb_obj.active
 copy_obj = wb_obj.copy_worksheet(sheet_obj)
+# text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
 
 # Otvírání textového souboru ve formátu výplatnice
-# text_path = "C:/Users/Martina/Desktop/škola/informatika/git.projectinf/DataQuali.txt"
 text_path = not_valid(".txt")
 
 # Převedení excelu na csv
@@ -82,9 +83,7 @@ def what_month(person):
         elif person[i] == "1":
             separate = months_list[i].split("/")
             month = int(separate[0])
-            if month < 10:
-                separate.pop(0)
-                separate.insert(0, f"0{month}")
+            "{:02d}".format(month)
             month_in_format = ".".join(separate) + "/"
             months.append(month_in_format)
         else:
@@ -174,4 +173,5 @@ for person in list_of_People:
         print(f"Error. Person {person.PN} or payroll with last month not found in text file.")
 
 wb_obj.save(path)
+print("You should be able to find the finished final report in your excel file.")
 os.remove(f"{path}.csv")
