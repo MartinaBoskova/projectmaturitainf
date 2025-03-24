@@ -146,7 +146,7 @@ with open(f"{text_path}", "r") as f:
                                 else:
                                     person.fall30 = True
                             if steuer is True:
-                                if text_rows[scnd_dash][38].isspace() or text_rows[scnd_dash][38] == "":
+                                if text_rows[scnd_dash][45].isspace() or text_rows[scnd_dash][45] == "":
                                     scnd_dash = scnd_dash + 1
                                 else:
                                     person.fall27 = True
