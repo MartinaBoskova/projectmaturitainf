@@ -1,0 +1,142 @@
+
+     Filmpalast Pilsen
+      MB & Co.KG	                     03.24/2   10.24 30,0
+     Informatikastraße 1
+     54321 Pilsen	                     10.09.21 30 6	     vd
+
+     1002000/3333                            09.09.00 30 0100     4 011 24090900A029
+     anö
+     Psí 13				                 LBBW/BW-Bank Stuttgart
+     54321 Pilsen
+			                         0000111 DE12 1234 1234 1234 1234 12
+
+					         K1AS
+
+
+
+
+					                                   ab Mon.01
+Urlaubsentgelt DS104021    4,00 TG	            456,78  LL
+------------------------------------------------------------------------------------
+Gesamt  -  Brutto001010		  	            456,78 * 	           7.890,45
+EBV-Brutto 	 001011		  	            	           456,78  7.890,45
+------------------------------------------------------------------------------------
+Lohnsteuer	 001060		  	             45,67-                  456,78
+AN Rentenversich.001170             1,23	     12,34- Arbg.  789,45    567,89
+------------------------------------------------------------------------------------
+Netto		 001470				    345,67 *
+EBV-Netto 	 001471							     345,67
+------------------------------------------------------------------------------------
+Übertrag Zahlmona001472				    345,67 *
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+                   KV-Brutto    RV-Brutto    AV-Brutto    PV-Brutto       ST-Brutto
+laufend                            456,78				     456,78
+SV-vermid. AE			   678,90
+EGA/Sonstige			     0,00			               0,00
+Abrech.-Summe                      456,78				     456,78
+Jahressumme			 4.567,89				   4.567,89
+Einzugsstelle  011  AOK Baden-Württemberg
+Steueridentifikationsnummer:  1234567890
+					     Übergangsbereich: Ja
+
+ST/SV: L = Lfd. Bezug/Gesamtbrutto    l = Lfd. Bezug/n. im Gesamtbrutto
+       S = Sonst. Bezug/Gesamtbrutto  s = Sonst./n. im Gesamtbrutto
+       E = Einmalbezug/Gesamtbrutto   e = Einmalbezug/n. im Gesamtbrutto
+
+Entgeltbescheinigung nach Para-108 Absatz 3 Satz 1 der Gewerbeordnung
+
+     Filmpalast Pilsen
+      MB & Co.KG	                     08.24/2   10.24 30,0
+     Informatikastraße 1
+     54321 Pilsen	                     10.09.21 30 6	     vd
+
+     1002000/44444                           09.09.00 30 0100     4 011 24090900A029
+     Pan pes
+     Psí 13				                 LBBW/BW-Bank Stuttgart
+     54321 Pilsen
+			                         0000111 DE12 1234 1234 1234 1234 12
+
+					         K1AS
+
+
+
+
+					                                   ab Mon.01
+------------------------------------------------------------------------------------
+Gesamt  -  Brutto001010		  	            456,78 * 	           7.890,45
+EBV-Brutto 	 001011		  	            	           456,78  7.890,45
+------------------------------------------------------------------------------------
+Lohnsteuer	 001060		  	             45,67-                  456,78
+AN Rentenversich.001170             1,23	     12,34- Arbg.  789,45    567,89
+------------------------------------------------------------------------------------
+Netto		 001470				    345,67 *
+EBV-Netto 	 001471							     345,67
+------------------------------------------------------------------------------------
+Übertrag Zahlmona001472				    345,67 *
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+                   KV-Brutto    RV-Brutto    AV-Brutto    PV-Brutto       ST-Brutto
+laufend                            456,78				     456,78
+SV-vermid. AE			   678,90
+EGA/Sonstige			     0,00			               0,00
+Abrech.-Summe                      456,78				     456,78
+Jahressumme			 4.567,89				   4.567,89
+Einzugsstelle  011  AOK Baden-Württemberg
+Steueridentifikationsnummer:  1234567890
+					     Übergangsbereich: Ja
+
+ST/SV: L = Lfd. Bezug/Gesamtbrutto    l = Lfd. Bezug/n. im Gesamtbrutto
+       S = Sonst. Bezug/Gesamtbrutto  s = Sonst./n. im Gesamtbrutto
+       E = Einmalbezug/Gesamtbrutto   e = Einmalbezug/n. im Gesamtbrutto
+
+Entgeltbescheinigung nach Para-108 Absatz 3 Satz 1 der Gewerbeordnung
+
+     Filmpalast Pilsen
+      MB & Co.KG	                     08.24/2   10.24 30,0
+     Informatikastraße 1
+     54321 Pilsen	                     10.09.21 30 6	     vd
+
+     1002000/555555                          09.09.00 30 0100     4 011 24090900A029
+     Pan les
+     Psí 13				                 LBBW/BW-Bank Stuttgart
+     54321 Pilsen
+			                         0000111 DE12 1234 1234 1234 1234 12
+
+					         K1AS
+
+
+
+
+					                                   ab Mon.01
+------------------------------------------------------------------------------------
+Gesamt  -  Brutto001010		  	            456,78 * 	           7.890,45
+EBV-Brutto 	 001011		  	            	           456,78  7.890,45
+------------------------------------------------------------------------------------
+Lohnsteuer	 001060		    1,23             45,67-                  456,78
+AN Rentenversich.001170             1,23	     12,34- Arbg.  789,45    567,89
+------------------------------------------------------------------------------------
+Netto		 001470				    345,67 *
+EBV-Netto 	 001471							     345,67
+------------------------------------------------------------------------------------
+Übertrag Zahlmona001472				    345,67 *
+------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+
+                   KV-Brutto    RV-Brutto    AV-Brutto    PV-Brutto       ST-Brutto
+laufend                            456,78				     456,78
+SV-vermid. AE			   678,90
+EGA/Sonstige			     0,00			               0,00
+Abrech.-Summe                      456,78				     456,78
+Jahressumme			 4.567,89				   4.567,89
+Einzugsstelle  011  AOK Baden-Württemberg
+Steueridentifikationsnummer:  1234567890
+					     Übergangsbereich: Ja
+
+ST/SV: L = Lfd. Bezug/Gesamtbrutto    l = Lfd. Bezug/n. im Gesamtbrutto
+       S = Sonst. Bezug/Gesamtbrutto  s = Sonst./n. im Gesamtbrutto
+       E = Einmalbezug/Gesamtbrutto   e = Einmalbezug/n. im Gesamtbrutto
+
+Entgeltbescheinigung nach Para-108 Absatz 3 Satz 1 der Gewerbeordnung
